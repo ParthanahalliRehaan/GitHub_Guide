@@ -1,0 +1,394 @@
+Here’s a **clean, improved, security-focused version** of your section — including **all safety steps** you MUST take after using Git + PAT on a friend’s PC.
+No entities or URLs needed since this is technical instructions only.
+
+---
+
+# 🔐 Using GitHub on a Friend’s PC (The Safe Way)
+
+When you're working on **someone else’s computer**, the goal is simple:
+
+### ✔️ Do your work
+
+### ✔️ Leave **zero trace**
+
+### ✔️ Keep your GitHub account **100% safe**
+
+SSH keys are **not** ideal on a friend’s PC because:
+
+* You leave behind a private SSH key file
+* You must configure SSH
+* Their PC remains authorized forever unless you revoke the key
+* Risky if you forget to delete keys
+
+That’s why we use:
+
+# 🧭 Best Choice: **Personal Access Token (PAT) or HTTPS**
+
+PATs are safer on a borrowed PC because:
+
+* No private key stays on the machine
+* PATs can be **instantly revoked** from your GitHub settings
+* Git stores the token only in the Windows Credential Manager
+* Easy to delete afterward
+
+👉 So the rule is:
+
+### **✔️ Use SSH keys only on your own machine**
+
+### **✔️ Use PAT on any temporary / shared / friend's machine**
+
+---
+
+# 🛡️ After You’re Done — SAFETY STEPS (IMPORTANT)
+
+Follow these steps **every single time** you finish working on a friend’s PC.
+
+---
+
+## **1️⃣ Delete GitHub credentials from Windows Credential Manager**
+
+### Option A — GUI (easiest)
+
+1. Open **Credential Manager**
+
+   * Press **Windows + S**
+   * Search **Credential Manager**
+2. Go to **Windows Credentials**
+3. Look for:
+
+   * `git:https://github.com`
+   * or `Generic Credential` containing `github.com`
+4. Click **Remove**
+
+---
+
+## **2️⃣ Delete credentials using Command Line (PowerShell)**
+
+```powershell
+cmdkey /list
+```
+
+Find the entry containing GitHub.
+
+Then delete it:
+
+```powershell
+cmdkey /delete:git:https://github.com
+```
+
+---
+
+## **3️⃣ Clear Git cache (optional but recommended)**
+
+If you used `git credential-cache`, clear it:
+
+```powershell
+git credential-cache exit
+```
+
+---
+
+## **4️⃣ Remove temporary Git config overrides**
+
+If you set a username or email:
+
+```powershell
+git config --global --unset user.name
+git config --global --unset user.email
+```
+
+If you configured a PAT helper:
+
+```powershell
+git config --global --unset credential.helper
+```
+
+---
+
+## **5️⃣ Revoke the PAT (IMPORTANT)**
+
+Go to your GitHub **→ Settings → Developer settings → PATs**
+Click **Revoke** for the token you used.
+
+This ensures the token is useless even if someone copied it.
+
+---
+
+## **6️⃣ Delete any project folder you cloned**
+
+If the repo contains sensitive code:
+
+* Delete the folder
+* Empty the Recycle Bin
+
+---
+
+# ✅ Final Recommended Workflow (Safe)
+
+### On your friend’s PC:
+
+1. Clone repo → Git asks for username & PAT
+2. Do your work
+3. Push your changes
+4. Perform all cleanup steps above
+5. Revoke the PAT
+
+### End result:
+
+* No SSH keys left behind
+* No credentials saved
+* No trace in Git
+* Token revoked → 0% chance of misuse
+
+---
+
+## ⚙️ Fixing Your SSH Config
+Your config snippet:
+```text
+Host github-account
+  HostName github.com
+  User git
+  IdentityFile /c/Users/rehaa/.ssh/id_rsa
+
+Host github-not-account
+  HostName github.com
+  User git
+  IdentityFile /c/Users/rehaa/.ssh/id_rsa_not_account
+```
+
+### Problems in your test commands:
+1. **Wrong syntax when testing**  
+   - You should run:
+     ```bash
+     ssh -T github-account
+     ```
+     ```bash
+     ssh -T github-not-account
+     ```
+     this doesn't work on windows terminal but only on linux terminals as:
+                            Git Bash behaved, PowerShell sulked
+                                ---
+
+                                # 🧩 Why Git Bash Works but PowerShell Breaks
+
+                                You created an SSH config with **MSYS paths**:
+
+                                ```
+                                /c/Users/rehaa/.ssh/id_rsa
+                                /c/Users/rehaa/.ssh/id_rsa_not_account
+                                ```
+
+                                Git Bash understands these because it's basically a Linux cosplay environment.
+                                PowerShell is Windows. It looks at `/c/...` and goes, *"What clown wrote this?"*
+
+                                So:
+
+                                * **Git Bash** expands MSYS paths to Windows paths automatically.
+                                * **PowerShell/OpenSSH** doesn't translate them and therefore breaks.
+
+                                That’s literally the whole issue.
+
+                                ---
+
+                                # 📌 Correct Way to Make Both Shells Behave
+
+                                Use **Windows-native paths**, not MSYS ones:
+
+                                ```
+                                IdentityFile C:/Users/rehaa/.ssh/id_rsa
+                                IdentityFile C:/Users/rehaa/.ssh/id_rsa_not_account
+                                ```
+
+                                Forward slashes are fine. Backslashes also work, but they’re ugly:
+
+                                ```
+                                IdentityFile C:\Users\rehaa\.ssh\id_rsa
+                                ```
+
+                                Once you fix the paths, both Git Bash and PowerShell will stop gasping for air.
+
+                                ---
+
+                                # 🧠 SSH Keys vs PAT (Why PAT on Someone Else’s PC)
+
+                                * **SSH keys = long-term identity** stored on your machine.
+                                Never generate these on a machine you don't own.
+                                * **PAT (Personal Access Token) = temporary password**.
+                                Easy to revoke. Zero local files left behind.
+
+                                So:
+
+                                * **Your PC → SSH**
+                                * **Friend’s PC / temporary PC → PAT**
+
+                                Nothing deep. Just hygiene.
+
+                                ---
+
+                                # 🔧 Why You Saw File-Not-Found Errors
+
+                                This message:
+
+                                ```
+                                no such identity: /c/Users/rehaa/.ssh/id_rsa_not_account
+                                ```
+
+                                means SSH couldn't find the file **on PowerShell**, because that shell doesn’t understand `/c/...`.
+                                On Git Bash, the identical command works because Git Bash translates that path for you.
+
+                                The file may exist. PowerShell just didn’t know how to locate it.
+
+                                ---
+
+                                # 📑 Clean Summary of Your Situation
+
+                                ## 1. You have two SSH keys.
+
+                                Cool. Keep them.
+
+                                ## 2. Your SSH config used MSYS paths.
+
+                                Only Git Bash understands them.
+
+                                ## 3. PowerShell uses Windows OpenSSH.
+
+                                It doesn't understand MSYS paths, so it freaked out.
+
+                                ## 4. The fix: Use Windows paths in `~/.ssh/config`.
+
+                                Then both shells will work.
+
+                                ## 5. PAT is correct for machines that aren’t yours.
+
+                                You already reasoned that correctly.
+
+                                ---
+
+                                # 🎯 Final Clean Configuration (Works Everywhere)
+
+                                ```
+                                Host github-account
+                                HostName github.com
+                                User git
+                                IdentityFile C:/Users/rehaa/.ssh/id_rsa
+
+                                Host github-not-account
+                                HostName github.com
+                                User git
+                                IdentityFile C:/Users/rehaa/.ssh/id_rsa_not_account
+                                ```
+
+                                That’s it. No drama.
+
+                                ---
+
+
+2. **Passphrase prompt**  
+   - When you see:
+     ```
+     Enter passphrase for key 'C:\Users\rehaa/.ssh/id_rsa':
+     ```
+     that’s expected if you set a passphrase. Use `ssh-agent` to cache it.
+
+---
+
+## 🔍 Correct Testing Flow
+1. Generate both keys:
+   ```bash
+   ssh-keygen -t rsa -f ~/.ssh/id_rsa -C "main_account@gmail.com"
+   ssh-keygen -t rsa -f ~/.ssh/id_rsa_not_account -C "alt_account@gmail.com"
+   ```
+2. Add them to agent:
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/id_rsa
+   ssh-add ~/.ssh/id_rsa_not_account
+   ```
+3. Add both public keys (`.pub`) to GitHub under different accounts.
+4. Test:
+   ```bash
+   ssh -T github-account
+   ssh -T github-not-account
+   ```
+
+---
+
+## 🔐 Advanced SSH Concepts
+SSH isn’t just for GitHub — it’s a **secure transport protocol**. Here’s the pro-level stuff:
+
+### 1. File Transfer
+- **SCP (Secure Copy)**:
+  ```bash
+  scp localfile.txt user@remote:/path/to/destination/
+  ```
+- **Recursive directory copy**:
+  ```bash
+  scp -r myfolder user@remote:/var/www/
+  ```
+
+- **SFTP (interactive file transfer)**:
+  ```bash
+  sftp user@remote
+  ```
+  Then use commands like `put`, `get`, `ls`, `cd`.
+
+---
+
+### 2. Port Forwarding / Tunneling
+- **Local forwarding** (access remote DB locally):
+  ```bash
+  ssh -L 5432:localhost:5432 user@remote
+  ```
+  → Connect to `localhost:5432` on your machine, traffic goes securely to remote DB.
+
+- **Remote forwarding** (expose local service to remote):
+  ```bash
+  ssh -R 8080:localhost:3000 user@remote
+  ```
+  → Remote server can access your local app at port 3000.
+
+- **Dynamic forwarding (SOCKS proxy)**:
+  ```bash
+  ssh -D 1080 user@remote
+  ```
+  → Turns SSH into a proxy server for secure browsing.
+
+---
+
+### 3. Multiplexing (reuse connections)
+- Add to `~/.ssh/config`:
+  ```text
+  Host *
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
+  ```
+  → First SSH connection stays open, subsequent ones reuse it (faster).
+
+---
+
+### 4. Agent Forwarding
+- If you SSH into server A, then from A into GitHub:
+  ```bash
+  ssh -A user@serverA
+  ```
+  → Your local keys are forwarded, so you don’t need to copy private keys to server A.
+
+---
+
+### 5. Security Practices
+- Use **ED25519 keys** for modern security.
+- Always set **passphrases** on private keys.
+- Use **ssh-agent** or OS keychain to avoid typing passphrase every time.
+- Rotate keys periodically.
+
+---
+
+## 🧠 Big Picture
+- **SSH for identity-based, persistent dev work.**
+- **PAT for temporary, revocable access (like on a friend’s PC).**
+- SSH config aliases let you manage multiple accounts cleanly.
+- Beyond GitHub, SSH is a **Swiss Army knife**: secure shell, file transfer, tunneling, proxying, multiplexing.
+
+---
+

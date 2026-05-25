@@ -1,0 +1,199 @@
+---
+
+# 🧭 Git Porcelain Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. Porcelain vs Plumbing
+- **Porcelain**: User-facing commands (friendly, high-level). Examples: `add`, `commit`, `status`, `log`, `push`, `pull`.  
+- **Plumbing**: Low-level commands (internal, script-oriented). Examples: `update-index`, `cat-file`.  
+
+👉 We focus on **porcelain** because they’re the ones you’ll use daily.
+
+---
+
+## 🔹 2. Core Workflow Commands
+
+### `git add`
+```bash
+git add file.txt
+git add .          # stage all changes
+```
+**Purpose**: Moves changes into the **staging area** (index).  
+- Think of it as preparing files for the next snapshot.  
+- Without `add`, changes won’t be included in the commit.
+
+---
+
+### `git commit`
+```bash
+git commit -m "Add new feature"
+git commit         # opens editor for message
+```
+**Purpose**: Creates a **snapshot** of staged changes in the repository history.  
+- Commits are atomic checkpoints.  
+- Each commit has an ID (SHA-1/2) and metadata (author, date, message).
+
+---
+
+### `git status`
+```bash
+git status
+```
+**Purpose**: Shows the **current repo state**.  
+- What’s staged, unstaged, or untracked.  
+- Helps you avoid surprises before committing.
+
+---
+
+### `git log`
+```bash
+git log
+git log --oneline --graph --decorate
+```
+**Purpose**: Displays the **commit history**.  
+- Useful for tracing changes, debugging, or reviewing project evolution.  
+- Options like `--graph` visualize branch merges.
+
+---
+
+### `git push`
+```bash
+git push origin main
+```
+**Purpose**: Sends local commits to a **remote repository**.  
+- Default remote is `origin`.  
+- Push updates the remote branch to match your local branch.
+
+---
+
+### `git pull`
+```bash
+git pull origin main
+```
+**Purpose**: Fetches changes from remote and **merges/rebases** into local branch.  
+- Equivalent to `git fetch` + `git merge` (unless configured to rebase).  
+- Keeps your local repo in sync with collaborators.
+
+---
+
+## 🔹 3. Supporting Porcelain Commands
+
+### `git clone`
+```bash
+git clone https://github.com/rehaan/project.git
+```
+**Purpose**: Copies a remote repository locally.  
+- Sets up `.git` directory, working tree, and default remote (`origin`).  
+
+---
+
+### `git branch`
+```bash
+git branch feature-x
+git branch -d feature-x
+```
+**Purpose**: Manage branches.  
+- Create, list, delete branches.  
+- Branches are pointers to commits.
+
+---
+
+### `git checkout` / `git switch`
+```bash
+git checkout feature-x
+git switch -c new-feature
+```
+**Purpose**: Move between branches or restore files.  
+- `switch` is newer, clearer for branch operations.  
+- `checkout` still widely used.
+
+---
+
+### `git merge`
+```bash
+git merge feature-x
+```
+**Purpose**: Combines changes from one branch into another.  
+- Creates a merge commit if histories diverge.  
+- Resolves conflicts manually if needed.
+
+---
+
+### `git fetch`
+```bash
+git fetch origin
+```
+**Purpose**: Downloads changes from remote **without merging**.  
+- Lets you inspect before integrating.  
+- Safe way to preview remote updates.
+
+---
+
+## 🔹 4. Variations & Options
+
+### Amend Commit
+```bash
+git commit --amend -m "Updated message"
+```
+**Purpose**: Modify the last commit (message or content).  
+
+---
+
+### Interactive Add
+```bash
+git add -p
+```
+**Purpose**: Stage changes **hunk by hunk**.  
+- Useful for partial commits.
+
+---
+
+### Pull with Rebase
+```bash
+git pull --rebase
+```
+**Purpose**: Keeps history linear by rebasing instead of merging.  
+
+---
+
+### Push Force
+```bash
+git push --force
+```
+**Purpose**: Overwrites remote branch history.  
+⚠️ Dangerous — use only when necessary.
+
+---
+
+## 🔹 5. Summary Table
+
+| Command   | Purpose | Common Options |
+|-----------|---------|----------------|
+| `add`     | Stage changes | `.` (all), `-p` (interactive) |
+| `commit`  | Snapshot staged changes | `-m`, `--amend` |
+| `status`  | Show repo state | none |
+| `log`     | View commit history | `--oneline`, `--graph` |
+| `push`    | Upload commits to remote | `--force`, `--set-upstream` |
+| `pull`    | Fetch + merge/rebase | `--rebase` |
+| `clone`   | Copy remote repo | `--depth=1` (shallow) |
+| `branch`  | Manage branches | `-d`, `-m` |
+| `checkout`| Switch branch/restore files | `-b` (new branch) |
+| `merge`   | Combine branches | `--no-ff` |
+| `fetch`   | Download remote changes | none |
+
+---
+
+## 🔹 6. Pro-Level Porcelain Usage
+- **Rewriting History**: `git rebase -i HEAD~n` → interactive rebase for squashing/reordering commits.  
+- **Cherry-Pick**: `git cherry-pick <commit>` → apply a specific commit onto current branch.  
+- **Stash**: `git stash` → temporarily save uncommitted changes.  
+- **Bisect**: `git bisect` → binary search through commits to find a bug.  
+
+---
+
+✅ Now you have the **Porcelain V2**:  
+- Clear definitions tied to **purpose**.  
+- Variations like amend, interactive add, rebase.  
+- Summary table for quick reference.  
+- Pro-level commands for advanced workflows.  
+
+---

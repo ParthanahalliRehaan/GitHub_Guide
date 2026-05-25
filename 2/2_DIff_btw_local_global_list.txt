@@ -1,0 +1,19 @@
+- **`git config --list`**  
+  This shows *all* Git configuration values that are currently in effect. That includes values from:
+  - System-level config (`/etc/gitconfig`)
+  - Global config (`~/.gitconfig`)
+  - Local config (`.git/config` inside the repo)
+  - Environment variables
+
+- **`git config --list --local`**  
+  This restricts the output to only the **local repository configuration** (the `.git/config` file in the repo you’re in). It won’t show global or system settings.
+
+👉 So, `git config --list` is broader, while `git config --list --local` is a subset. If you’re inside a repo, you’ll see local settings in both, but `--list` may also include global/system ones layered on top.
+
+A quick way to compare is:
+```bash
+git config --list          # shows everything
+git config --list --local  # shows only repo-specific
+git config --list --global # shows only user-specific (~/.gitconfig)
+git config --list --system # shows system-wide (/etc/gitconfig)
+```

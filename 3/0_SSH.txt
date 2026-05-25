@@ -1,0 +1,77 @@
+**SSH has dozens of arguments and options, but for GitHub usage the most important ones are those that control authentication, identity files, host checking, and connection forwarding.** Below is a structured breakdown of SSH flags and how they matter when working with GitHub repositories over SSH.
+
+---
+
+## 🔑 Core SSH Options for GitHub
+When cloning, pushing, or pulling via SSH (`git@github.com:user/repo.git`), these are the most relevant:
+
+- **`-i identity_file`**  
+  Specify which private key to use (e.g., `~/.ssh/id_ed25519`).  
+  GitHub requires you to register the corresponding public key in your account.
+
+- **`-p port`**  
+  Change the port (default is 22). GitHub also supports port 443 for SSH over HTTPS if 22 is blocked.
+
+- **`-o option=value`**  
+  Pass advanced options inline. Common GitHub-related ones:  
+  - `-o StrictHostKeyChecking=no` → bypass host key verification (use cautiously, often in CI/CD).  
+  - `-o UserKnownHostsFile=/dev/null` → avoid writing host keys to disk.  
+  - `-o IdentityFile=~/.ssh/custom_key` → same as `-i`.
+
+- **`-T`**  
+  Disable pseudo-terminal allocation. GitHub recommends this when testing keys:  
+  ```bash
+  ssh -T git@github.com
+  ```
+
+---
+
+## 🌍 General SSH Flags (Grouped)
+Here’s a quick reference table:
+
+| Flag | Purpose | GitHub Relevance |
+|------|----------|------------------|
+| `-4` / `-6` | Force IPv4/IPv6 | Rarely needed |
+| `-A` | Forward authentication agent | Useful if chaining through jump hosts |
+| `-C` | Enable compression | Speeds up large repo transfers |
+| `-F configfile` | Use custom config file | Common for GitHub multi-key setups |
+| `-J host` | Jump host | Rare for GitHub, more for enterprise |
+| `-L [bind:]port:host:hostport` | Local port forwarding | Not used for GitHub |
+| `-R [bind:]port:host:hostport` | Remote port forwarding | Not used for GitHub |
+| `-D [bind:]port` | Dynamic SOCKS proxy | Not used for GitHub |
+| `-E logfile` | Write debug logs | Helpful for troubleshooting GitHub SSH |
+| `-v`, `-vv`, `-vvv` | Verbose/debug output | Essential for debugging GitHub SSH issues |
+
+---
+
+## ⚙️ GitHub-Specific Workflows
+- **Testing your key:**  
+  ```bash
+  ssh -T git@github.com
+  ```
+  If successful, GitHub replies: *“Hi username! You've successfully authenticated…”*
+
+- **Multiple accounts/keys:**  
+  Use `~/.ssh/config` with entries like:
+  ```text
+  Host github.com-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_work
+  ```
+
+- **CI/CD pipelines:**  
+  Often bypass host key checking temporarily:  
+  ```bash
+  GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:user/repo.git
+  ```  [Codegenes](https://www.codegenes.net/blog/passing-ssh-options-to-git-clone/)
+
+---
+
+## 🚨 Risks & Best Practices
+- **Never disable host key checking permanently** — it exposes you to MITM attacks. Only bypass in trusted automation environments.  
+- **Use modern keys (ed25519)** — faster and more secure than RSA.  
+- **Limit agent forwarding (`-A`)** — attackers on remote hosts could misuse your agent.  
+- **Always check verbose logs (`-vvv`)** when debugging GitHub SSH issues.
+
+---

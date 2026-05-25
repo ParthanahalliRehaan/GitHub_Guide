@@ -1,0 +1,93 @@
+---
+
+# 🧭 Git Reflog Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- `git reflog` records every movement of `HEAD` (commits, checkouts, resets, rebases).  
+- Unlike `git log`, which shows project history, **reflog shows your local actions**.  
+👉 Think of it as Git’s “black box flight recorder” — you can recover lost commits after resets or rebases.
+
+---
+
+## 🔹 2. Basic Usage
+```bash
+git reflog
+```
+
+Example output:
+```
+a1b2c3 HEAD@{0}: commit: Add login
+d4e5f6 HEAD@{1}: checkout: moving from main to feature-x
+g7h8i9 HEAD@{2}: reset: moving to HEAD~1
+```
+
+---
+
+## 🔹 3. Advanced Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--relative-date` | Show relative times | `git reflog --relative-date` |
+| `--date=iso` | Show ISO timestamps | `git reflog --date=iso` |
+| `--all` | Show reflog for all refs | `git reflog --all` |
+| `branchname` | Show reflog for a specific branch | `git reflog feature-x` |
+| `stash` | Show reflog for stash | `git reflog stash` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Recover lost commit after reset
+You ran:
+```bash
+git reset --hard HEAD~2
+```
+👉 Two commits disappeared. Use reflog:
+```bash
+git reflog
+# find commit hash of lost work
+git checkout <lost-commit-hash>
+```
+
+---
+
+### Scenario B: Undo a mistaken rebase
+You rebased `feature-x` but want to go back:
+```bash
+git reflog
+git reset --hard HEAD@{3}   # return to state before rebase
+```
+
+---
+
+### Scenario C: Track stash history
+You want to see when stashes were created:
+```bash
+git reflog stash
+```
+
+---
+
+### Scenario D: Inspect branch-specific reflog
+You want to see only `feature-login` movements:
+```bash
+git reflog feature-login
+```
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git reflog` | Show HEAD history |
+| `git reflog branchname` | Show reflog for specific branch |
+| `git reflog stash` | Show stash history |
+| `git reflog --all` | Show reflog for all refs |
+| `git reset --hard HEAD@{n}` | Restore repo to previous reflog state |
+
+---
+
+✅ That’s the **full advanced breakdown of `git reflog`** — your safety net when commits seem “lost.”  

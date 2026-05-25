@@ -1,0 +1,2 @@
+
+For lnx basics to be cleared Go to https://github.com/ParthanahalliRehaan/Linux_CbrSec_LabEx

@@ -1,0 +1,281 @@
+---
+
+# 🧭 Git Rebase Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. What is Rebase?
+- **Merge** combines histories → may create merge commits.  
+- **Rebase** rewrites history → moves commits to a new base, creating a linear timeline.  
+👉 Think of it as “replaying” commits on top of another branch.
+
+---
+
+## 🔹 2. Basic Rebase
+
+### Rebase Current Branch onto Another
+```bash
+git checkout feature-x
+git rebase main
+```
+- Takes commits from `feature-x` and replays them on top of `main`.  
+- Result: linear history, as if `feature-x` started from the latest `main`.
+
+---
+
+### Continue / Abort / Skip
+- If conflicts occur:
+  ```bash
+  git rebase --continue   # after resolving conflicts
+  git rebase --abort      # cancel rebase, return to original state
+  git rebase --skip       # skip problematic commit
+  ```
+
+---
+
+### Rebase All Branches
+```bash
+git rebase --all
+```
+- Rebase multiple branches (rarely used, but possible).
+
+---
+
+## 🔹 3. Interactive Rebase
+
+### Start Interactive Rebase
+```bash
+git rebase -i HEAD~5
+```
+- Opens editor with last 5 commits.  
+- You can **reorder, squash, edit, drop** commits.
+
+Example editor view:
+```
+pick a1b2c3 Add login
+pick d4e5f6 Fix typo
+pick g7h8i9 Add logout
+```
+
+---
+
+### Actions in Interactive Rebase
+- `pick` → keep commit as is.  
+- `reword` → change commit message.  
+- `edit` → pause to amend commit.  
+- `squash` → combine commit into previous one (keep both messages).  
+- `fixup` → combine commit into previous one (discard message).  
+- `drop` → remove commit entirely.  
+
+---
+
+### Squash Example
+```
+pick a1b2c3 Add login
+squash d4e5f6 Fix typo
+```
+Result: one commit with combined changes.
+
+---
+
+### Reword Example
+```
+reword g7h8i9 Add logout
+```
+- Lets you edit commit message during rebase.
+
+---
+
+## 🔹 4. Advanced Rebase Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `-i` | Interactive mode | `git rebase -i HEAD~n` |
+| `--onto` | Rebase onto specific commit/branch | `git rebase --onto main feature-x` |
+| `--exec` | Run command after each commit | `git rebase -i --exec "npm test"` |
+| `--autosquash` | Auto-squash commits marked with `fixup!` or `squash!` | `git rebase -i --autosquash` |
+| `--root` | Rebase from root commit | `git rebase --root` |
+| `--keep-empty` | Keep empty commits | `git rebase --keep-empty` |
+
+---
+
+### Rebase Onto
+```bash
+git rebase --onto main old-base feature-x
+```
+- Replay commits from `feature-x` (after `old-base`) onto `main`.  
+- Useful for complex branch restructuring.
+
+---
+
+### Autosquash
+```bash
+git commit --fixup <commit>
+git rebase -i --autosquash HEAD~n
+```
+- Automatically squashes fixup commits into their targets.  
+- Saves time in cleanup workflows.
+
+---
+
+### Exec During Rebase
+```bash
+git rebase -i --exec "npm test" HEAD~5
+```
+- Runs tests after each commit replay.  
+- Ensures history is clean and passes checks.
+
+---
+
+## 🔹 5. Conflict Handling in Rebase
+- Conflicts appear just like merges:
+  ```diff
+  <<<<<<< HEAD
+  Current branch changes
+  =======
+  Incoming branch changes
+  >>>>>>> main
+  ```
+- Resolve manually → `git add file` → `git rebase --continue`.  
+- If too messy → `git rebase --abort`.
+
+---
+
+## 🔹 6. Rebase vs Merge
+
+| Aspect | Merge | Rebase |
+|--------|-------|--------|
+| History | Preserves branch divergence | Linearizes history |
+| Commit IDs | Stay the same | Rewritten (new SHAs) |
+| Merge Commit | Often created | None (unless conflicts) |
+| Collaboration | Safer (no rewrite) | Risky if already pushed |
+| Use Case | Team integration | Personal cleanup before sharing |
+
+---
+
+## 🔹 7. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git rebase branch` | Replay commits onto another branch |
+| `git rebase -i HEAD~n` | Interactive rebase (edit, squash, reorder) |
+| `git rebase --continue` | Resume after conflict resolution |
+| `git rebase --abort` | Cancel rebase |
+| `git rebase --skip` | Skip problematic commit |
+| `git rebase --onto` | Rebase onto specific commit/branch |
+| `git rebase -i --autosquash` | Auto-squash fixup commits |
+| `git rebase -i --exec "cmd"` | Run command after each commit |
+| `git rebase --root` | Rebase from root commit |
+
+---
+
+✅ That’s the **full breakdown of rebase** — both **basic** and **interactive**, with all flags, workflows, and advanced options.
+
+---
+        Perfect, let’s do a **deep dive on Git squash** the same way we did for rebase — structured, with definitions, purposes, commands, and advanced options.
+
+        ---
+
+        # 🧭 Git Squash Deep Dive (V2 with Definitions & Purposes)
+
+        ## 🔹 1. What is Squash?
+        - **Squash** = combine multiple commits into a single commit.  
+        - Purpose: clean up history, reduce noise, and present logical units of work.  
+        👉 Think of it as “compressing” several small steps into one meaningful commit.
+
+        ---
+
+        ## 🔹 2. Why Squash?
+        - **Before sharing code**: reviewers see fewer, more meaningful commits.  
+        - **After fixing typos/debugging**: collapse trivial commits into one.  
+        - **During rebase**: squash commits interactively for history cleanup.  
+
+        ---
+
+        ## 🔹 3. Squash in Interactive Rebase
+
+        ### Start Interactive Rebase
+        ```bash
+        git rebase -i HEAD~5
+        ```
+        - Opens editor with last 5 commits.
+
+        ### Example Editor
+        ```
+        pick a1b2c3 Add login
+        squash d4e5f6 Fix typo
+        squash g7h8i9 Adjust login logic
+        pick j1k2l3 Add logout
+        ```
+
+        - Commits `d4e5f6` and `g7h8i9` will be squashed into `a1b2c3`.  
+        - Result: one commit with combined changes.
+
+        ---
+
+        ## 🔹 4. Squash vs Fixup
+
+        | Action | Behavior |
+        |--------|-----------|
+        | `squash` | Combines commit into previous one, **keeps both commit messages** |
+        | `fixup` | Combines commit into previous one, **discards commit message** |
+
+        ### Example
+        ```
+        pick a1b2c3 Add login
+        fixup d4e5f6 Fix typo
+        ```
+        Result: one commit with only “Add login” message, typo fix included silently.
+
+        ---
+
+        ## 🔹 5. Autosquash Workflow
+
+        ### Create Fixup Commit
+        ```bash
+        git commit --fixup a1b2c3
+        ```
+
+        ### Run Autosquash
+        ```bash
+        git rebase -i --autosquash HEAD~n
+        ```
+        - Git automatically places fixup commits next to their targets.  
+        - Saves time in cleanup workflows.
+
+        ---
+
+        ## 🔹 6. Squash During Merge (Alternative)
+        You can squash commits when merging a branch:
+        ```bash
+        git checkout main
+        git merge --squash feature-x
+        git commit -m "Feature X complete"
+        ```
+        - All commits from `feature-x` become one commit in `main`.  
+        - Useful when you want a single “feature commit” instead of full history.
+
+        ---
+
+        ## 🔹 7. Advanced Options
+
+        | Command | Purpose |
+        |---------|---------|
+        | `git rebase -i HEAD~n` | Squash commits interactively |
+        | `git commit --fixup <commit>` | Create fixup commit for autosquash |
+        | `git rebase -i --autosquash` | Auto-squash fixup commits |
+        | `git merge --squash branch` | Squash all branch commits into one |
+        | `git reset --soft HEAD~n && git commit` | Manual squash (reset + recommit) |
+
+        ---
+
+        ## 🔹 8. Strategic Analogy
+        Think of squash as **editing a book draft**:
+        - Each commit = a sentence you wrote.  
+        - Squash = combine sentences into a polished paragraph.  
+        - Fixup = silently correct spelling without cluttering the draft notes.  
+
+        ---
+
+        ✅ That’s the **full breakdown of squash** — interactive, autosquash, merge squash, and manual reset methods.
+
+        ---
+

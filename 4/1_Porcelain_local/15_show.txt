@@ -1,0 +1,95 @@
+---
+
+# 🧭 Git Show Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- `git show` displays details about a commit, tag, or other Git object.  
+- Shows **metadata (author, date, message)** and the **diff of changes**.  
+👉 Think of it as “opening the commit envelope” to see what’s inside.
+
+---
+
+## 🔹 2. Basic Usage
+```bash
+git show HEAD          # show latest commit
+git show v1.0          # show commit/tag details
+git show a1b2c3        # show specific commit
+```
+
+---
+
+## 🔹 3. Advanced Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--stat` | Show summary of changes (files changed, insertions/deletions) | `git show --stat HEAD` |
+| `--name-only` | Show only filenames changed | `git show --name-only HEAD` |
+| `--name-status` | Show filenames + status (added/modified/deleted) | `git show --name-status HEAD` |
+| `--pretty=short` | Show commit metadata in short format | `git show --pretty=short HEAD` |
+| `--pretty=fuller` | Show detailed author/committer info | `git show --pretty=fuller HEAD` |
+| `--quiet` | Suppress diff output | `git show --quiet HEAD` |
+| `--no-patch` | Show commit metadata only (no diff) | `git show --no-patch HEAD` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Inspect latest commit
+You want to see what was just committed:
+```bash
+git show HEAD
+```
+
+---
+
+### Scenario B: See only filenames changed
+You don’t care about the diff, just which files changed:
+```bash
+git show --name-only HEAD
+```
+
+---
+
+### Scenario C: Summarize changes
+You want a quick overview of files and line counts:
+```bash
+git show --stat HEAD
+```
+
+---
+
+### Scenario D: Inspect a tag
+You want to see what commit `v2.0` points to:
+```bash
+git show v2.0
+```
+
+---
+
+### Scenario E: Metadata only
+You want commit info without the diff:
+```bash
+git show --no-patch HEAD
+```
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git show HEAD` | Show latest commit details |
+| `git show <commit>` | Show specific commit |
+| `git show <tag>` | Show commit/tag details |
+| `git show --stat` | Show summary of changes |
+| `git show --name-only` | Show filenames changed |
+| `git show --name-status` | Show filenames + status |
+| `git show --pretty=short` | Show short metadata |
+| `git show --pretty=fuller` | Show detailed metadata |
+| `git show --no-patch` | Show metadata only |
+
+---
+
+✅ That’s the **full advanced breakdown of `git show`** — your magnifying glass for commits and tags.  

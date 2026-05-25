@@ -1,0 +1,2 @@
+WSL and Windows git are almost same except some commands.
+    If faced some errors during practice just ask any LLM.

@@ -1,0 +1,158 @@
+---
+
+# 🧭 Git Pull Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. What is `git pull`?
+- **Purpose**: Updates your local branch with changes from a remote branch.  
+- It’s essentially:
+  ```bash
+  git fetch + git merge
+  ```
+- Depending on configuration, it may instead do:
+  ```bash
+  git fetch + git rebase
+  ```
+
+👉 So `pull` is a convenience command that combines fetching and integrating.
+
+---
+
+## 🔹 2. Basic Usage
+```bash
+git pull
+```
+- Fetches changes from the default remote (`origin`) and merges into the current branch.  
+
+```bash
+git pull origin main
+```
+- Fetches from `origin/main` and merges into your current branch.
+
+---
+
+## 🔹 3. Merge vs Rebase Behavior
+
+### Default (Merge)
+```bash
+git pull origin main
+```
+- Creates a merge commit if histories diverge.  
+- Preserves branch divergence.
+
+### Rebase Mode
+```bash
+git pull --rebase origin main
+```
+- Replays your local commits on top of the remote branch.  
+- Produces a linear history.  
+- Avoids merge commits.
+
+👉 You can set this as default:
+```bash
+git config --global pull.rebase true
+```
+
+---
+
+## 🔹 4. Useful Flags
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--rebase` | Rebase instead of merge | `git pull --rebase origin main` |
+| `--no-rebase` | Force merge even if rebase is default | `git pull --no-rebase` |
+| `--ff-only` | Only fast-forward, abort if merge needed | `git pull --ff-only` |
+| `--all` | Pull from all remotes | `git pull --all` |
+| `--depth=N` | Shallow pull (limit history) | `git pull --depth=1` |
+| `--tags` | Fetch and update tags | `git pull --tags` |
+| `--prune` | Remove deleted remote branches | `git pull --prune` |
+
+---
+
+## 🔹 5. Examples
+
+### Fast-Forward Only
+```bash
+git pull --ff-only
+```
+- Ensures no merge commits are created.  
+- Aborts if fast-forward isn’t possible.
+
+### Rebase Pull
+```bash
+git pull --rebase origin main
+```
+- Keeps history linear.  
+- Useful for feature branches before pushing.
+
+### Shallow Pull
+```bash
+git pull --depth=1
+```
+- Downloads only latest commits.  
+- Saves bandwidth/time in CI/CD.
+
+---
+
+## 🔹 6. Conflict Handling
+If conflicts occur during pull:
+1. Git pauses with conflict markers:
+   ```diff
+   <<<<<<< HEAD
+   Local changes
+   =======
+   Remote changes
+   >>>>>>> origin/main
+   ```
+2. Resolve manually.  
+3. Stage resolved files:
+   ```bash
+   git add file.txt
+   ```
+4. Continue:
+   ```bash
+   git merge --continue   # if merge
+   git rebase --continue  # if rebase
+   ```
+
+---
+
+## 🔹 7. Advanced Workflows
+
+### Pull All Remotes
+```bash
+git pull --all
+```
+- Updates all remotes configured in repo.
+
+### Pull Specific Ref
+```bash
+git pull origin refs/heads/feature-x
+```
+- Pulls a specific branch explicitly.
+
+### Pull with Prune
+```bash
+git pull --prune
+```
+- Cleans up local references to deleted remote branches.
+
+---
+
+## 🔹 8. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git pull` | Fetch + merge from default remote |
+| `git pull origin branch` | Pull specific branch |
+| `git pull --rebase` | Rebase instead of merge |
+| `git pull --ff-only` | Only fast-forward, abort otherwise |
+| `git pull --all` | Pull from all remotes |
+| `git pull --depth=1` | Shallow pull |
+| `git pull --tags` | Update tags |
+| `git pull --prune` | Remove deleted remote branches |
+
+---
+
+✅ That’s the **full breakdown of `git pull`** — from basic merging to advanced rebase workflows, shallow pulls, pruning, and conflict handling.
+
+---

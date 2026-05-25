@@ -1,0 +1,130 @@
+---
+
+# 🧭 Git Status Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. Basic Usage
+```bash
+git status
+```
+**Purpose**:  
+- Shows the **current state of your working directory and staging area**.  
+- Tells you:
+  - Which files are staged (ready to commit).  
+  - Which files are modified but not staged.  
+  - Which files are untracked (new, not yet added).  
+  - Which branch you’re on and whether it’s ahead/behind compared to remote (if remote exists).  
+
+---
+
+## 🔹 2. Output Breakdown
+Typical output looks like:
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   app.js
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   index.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        newfile.txt
+```
+
+- **On branch main** → current branch.  
+- **Changes to be committed** → staged files.  
+- **Changes not staged** → modified but not staged.  
+- **Untracked files** → new files not yet added.  
+
+---
+
+## 🔹 3. Options & Flags
+
+| Flag | Meaning | Example |
+|------|---------|---------|
+| `-s` / `--short` | Compact output (status in 2-letter codes) | `git status -s` |
+| `-b` | Show branch info in short mode | `git status -sb` |
+| `--ignored` | Show ignored files | `git status --ignored` |
+| `--untracked-files=no` | Hide untracked files | `git status --untracked-files=no` |
+| `--untracked-files=normal` | Default behavior (show untracked) | `git status --untracked-files=normal` |
+| `--untracked-files=all` | Show even hidden untracked files | `git status --untracked-files=all` |
+
+---
+
+### Short Status (`-s`)
+```bash
+git status -s
+```
+Output:
+```
+ M app.js      # Modified, not staged
+M  index.html  # Modified, staged
+?? newfile.txt # Untracked
+```
+- First column → staged state.  
+- Second column → unstaged state.  
+- `??` → untracked file.  
+
+---
+
+### Branch Info (`-sb`)
+```bash
+git status -sb
+```
+Output:
+```
+## main...origin/main [ahead 2, behind 1]
+ M app.js
+?? newfile.txt
+```
+- Shows branch tracking info (ahead/behind remote).  
+- Useful for quick sync check.
+
+---
+
+### Ignored Files
+```bash
+git status --ignored
+```
+- Lists files excluded by `.gitignore`.  
+- Helpful when debugging ignore rules.
+
+---
+
+## 🔹 4. Advanced Usage
+
+- **Hide untracked files** (cleaner output):
+  ```bash
+  git status --untracked-files=no
+  ```
+- **Show all untracked files** (including hidden):
+  ```bash
+  git status --untracked-files=all
+  ```
+- **Combine short + branch info**:
+  ```bash
+  git status -sb
+  ```
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git status` | Show repo state (staged, unstaged, untracked) |
+| `git status -s` | Short, compact output |
+| `git status -sb` | Short output + branch info |
+| `git status --ignored` | Show ignored files |
+| `git status --untracked-files=no` | Hide untracked files |
+| `git status --untracked-files=all` | Show all untracked files |
+
+---
+
+✅ That’s the **full breakdown of `git status`** — from basic usage to advanced flags for compact views, branch info, and ignored/untracked file handling.
+
+---

@@ -1,0 +1,45 @@
+this gets at the philosophy of **issues** in GitHub.  
+
+### 🎯 Purpose of Issues
+- Issues are **not just bugs** — they’re a way to track **tasks, enhancements, discussions, or questions**.
+- They serve as a **public record** of what needs attention, so collaborators (or even just you, if solo) can organize work.
+
+---
+
+### 👤 Can the Owner Create & Resolve Their Own Issue?
+Yes, absolutely.  
+- **Scenario:** You’re working solo on a repo. You notice a bug in your login function.  
+- You open an issue to document it:
+  ```bash
+  gh issue create --title "Fix login bug" --body "Login fails when username has spaces"
+  ```
+  Output:
+  ```
+  ✓ Created issue #12
+  https://github.com/Rehaan/my-new-repo/issues/12
+  ```
+
+- Later, you fix it and close the issue:
+  ```bash
+  gh issue close 12
+  ```
+  Output:
+  ```
+  ✓ Closed issue #12
+  ```
+
+This way, even though you’re both the reporter and resolver, you’ve kept a **clear history** of the problem and its resolution.
+
+---
+
+### 🧩 Why Not Just Skip Issues?
+- **Solo dev:** Issues act like a **personal to-do list**. You can track bugs, features, or reminders.
+- **Team dev:** Issues are **communication tools**. They let others know what’s being worked on, what’s pending, and who’s responsible.
+- **Project management:** Issues can be linked to pull requests, milestones, and projects, creating a structured workflow.
+
+---
+
+### ⚖️ Summary
+- **Owner can create and resolve their own issues.**  
+- Issues aren’t only for external contributors — they’re for **documentation, planning, and tracking progress**.  
+- Think of them as **tickets in a system**: even if you’re the only one using the system, it keeps your work organized and transparent.

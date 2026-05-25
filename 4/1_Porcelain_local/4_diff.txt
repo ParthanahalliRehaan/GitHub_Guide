@@ -1,0 +1,148 @@
+---
+
+# 🧭 Git Diff Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. Basic Usage
+```bash
+git diff
+```
+**Purpose**:  
+- Shows line-by-line differences between your **working directory** and the **staging area**.  
+- Default: unstaged changes only.
+
+---
+
+## 🔹 2. Key Variants
+
+### Compare Working Directory → Staging Area
+```bash
+git diff
+```
+- Shows changes not yet staged.
+
+### Compare Staging Area → Last Commit
+```bash
+git diff --staged
+```
+or
+```bash
+git diff --cached
+```
+- Shows changes that are staged but not yet committed.
+
+### Compare Working Directory → Last Commit
+```bash
+git diff HEAD~1 HEAD~2 or git diff HEAD@{1} HEAD@{2}
+```
+- Shows all changes (staged + unstaged) compared to last commit.
+
+---
+
+## 🔹 3. File-Specific Diff
+```bash
+git diff file.txt
+git diff --staged src/app.js
+```
+- Restrict diff to specific files.
+
+---
+
+## 🔹 4. Output Example
+```
+diff --git a/app.js b/app.js
+index 83db48f..f735c2a 100644
+--- a/app.js
++++ b/app.js
+@@ -10,7 +10,7 @@ function login() {
+-    return false;
++    return true;
+ }
+```
+- `-` lines removed.  
+- `+` lines added.  
+- Context lines shown around changes.
+
+---
+
+## 🔹 5. Useful Flags
+
+| Flag | Meaning | Example |
+|------|---------|---------|
+| `--stat` | Summary of changes (files, insertions, deletions) | `git diff --stat` |
+| `--name-only` | Show only filenames changed | `git diff --name-only` |
+| `--name-status` | Show filenames + status (A/M/D) | `git diff --name-status` |
+| `--color-words` | Word-level diff (instead of line-level) | `git diff --color-words` |
+| `--ignore-space-change` | Ignore whitespace differences | `git diff -b` |
+| `--ignore-all-space` | Ignore all whitespace | `git diff -w` |
+| `--check` | Highlight whitespace errors | `git diff --check` |
+| `--relative` | Show diff relative to current directory | `git diff --relative` |
+
+---
+
+## 🔹 6. Comparing Commits & Branches
+
+### Two Commits
+```bash
+git diff commit1 commit2
+```
+- Shows changes between two commits.
+
+### Branches
+```bash
+git diff main feature-x
+```
+- Shows differences between branches.
+
+### Commit vs Working Directory
+```bash
+git diff commitID
+```
+- Compare a past commit to current working directory.
+
+---
+
+## 🔹 7. Advanced Usage
+
+### Word-Level Diff
+```bash
+git diff --color-words
+```
+- Highlights changed words, not whole lines.  
+- Useful for prose or documentation.
+
+### Ignore Whitespace
+```bash
+git diff -w
+```
+- Treats whitespace-only changes as irrelevant.  
+- Handy when formatting changes clutter diffs.
+
+### Check for Errors
+```bash
+git diff --check
+```
+- Flags trailing whitespace or other style issues.
+
+---
+
+## 🔹 8. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git diff` | Show unstaged changes |
+| `git diff --staged` | Show staged changes |
+| `git diff HEAD` | Show all changes vs last commit |
+| `git diff file.txt` | Diff specific file |
+| `git diff --stat` | Summary of changes |
+| `git diff --name-only` | Show filenames only |
+| `git diff --name-status` | Show filenames + status |
+| `git diff commit1 commit2` | Compare two commits |
+| `git diff branch1 branch2` | Compare branches |
+| `git diff --color-words` | Word-level diff |
+| `git diff -w` | Ignore whitespace changes |
+
+---
+
+✅ That’s the **full breakdown of `git diff`** — from basic unstaged comparisons to advanced commit/branch diffs, whitespace handling, and word-level highlighting.
+
+---

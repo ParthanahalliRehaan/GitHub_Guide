@@ -1,0 +1,152 @@
+---
+
+## 🔑 SSH Keys vs PATs — Core Difference
+- **SSH Keys**
+  - Cryptographic key pair (private + public).
+  - Used for authentication over the `git@github.com:user/repo.git` protocol.
+  - Stored locally, added to GitHub once (public key).
+  - Passphrase optional: protects your private key if stolen.
+  - Best for long-term developer workflows on your own machine.
+
+- **PATs (Personal Access Tokens)**
+  - String token generated in GitHub (like a password substitute).
+  - Used with HTTPS URLs (`https://github.com/user/repo.git`).
+  - Scoped permissions (repo, workflow, admin, etc.).
+  - Expirable, revocable, can be rotated easily.
+  - Best for CI/CD, scripts, or environments where SSH isn’t practical.
+
+---
+
+## 🛠️ When to Use What
+- **Use SSH**:
+  - Daily development on your own machine.
+  - Secure, persistent, avoids typing credentials every push.
+  - Works well with multiple repos once configured.
+
+- **Use PAT**:
+  - Automated scripts, CI/CD pipelines.
+  - When HTTPS is required (corporate firewall blocking SSH).
+  - When you need fine-grained, revocable access.
+
+---
+
+## ⚙️ Creating & Managing SSH Keys
+1. **Generate a key**:
+   ```bash
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ```
+   - `-t ed25519` → modern, secure algorithm (better than RSA).
+   - It will ask for:
+     - **File location** (default: `~/.ssh/id_ed25519`).
+     - **Passphrase** (optional, adds extra security).
+
+2. **Add to SSH agent**:
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/id_ed25519
+   ```
+
+3. **Add public key to GitHub**:
+   - Copy with:
+     ```bash
+     cat ~/.ssh/id_ed25519.pub
+     ```
+   - Go to GitHub → Settings → SSH and GPG keys → New SSH key → Paste.
+
+4. **Verify connection**:
+   ```bash
+   ssh -T git@github.com
+   ```
+
+---
+
+## 🔐 Creating & Managing PATs
+1. **Generate PAT**:
+   - GitHub → Settings → Developer settings → Personal Access Tokens.
+   - Choose **Fine-grained token** (recommended).
+   - Select scopes (e.g., `repo`, `workflow`).
+
+2. **Use PAT with HTTPS remote**:
+   - Set remote:
+     ```bash
+     git remote set-url origin https://github.com/user/repo.git
+     ```
+   - On first push, Git will ask for username + password.
+     - Username = your GitHub username.
+     - Password = the PAT string.
+
+3. **Store PAT securely**:
+   - Use Git credential manager:
+     ```bash
+     git config --global credential.helper store
+     ```
+   - Or system keychain (on macOS/Windows).
+
+---
+
+## 🔄 Modify / Append / Delete
+- **SSH Keys**
+  - Multiple keys possible: `~/.ssh/id_ed25519`, `~/.ssh/work_key`, etc.
+  - Manage in `~/.ssh/config`:
+    ```text
+    Host github.com
+      HostName github.com
+      User git
+      IdentityFile ~/.ssh/id_ed25519
+    ```
+  - Delete by removing from GitHub settings or deleting local file.
+
+- **PATs**
+  - Rotate by generating a new token and updating stored credentials.
+  - Delete in GitHub settings.
+  - Append = not possible; each PAT is standalone.
+
+---
+
+## 🔍 Passphrase Behavior
+- **SSH**:
+  - If you set a passphrase, every time you use the key, you’ll be prompted.
+  - To avoid repeated prompts, use `ssh-agent` (it caches decrypted key).
+- **PAT**:
+  - No passphrase. It’s just a string. Security depends on how you store it.
+
+---
+
+## 📂 Types of Keys
+- **SSH**:
+  - RSA (legacy, still supported).
+  - ED25519 (modern, recommended).
+  - ECDSA (less common).
+- **PAT**:
+  - Classic (broad scopes, less secure).
+  - Fine-grained (repo-specific, recommended).
+
+---
+
+## 🚀 Workflow Example
+1. **SSH Workflow**:
+   ```bash
+   git clone git@github.com:user/repo.git
+   # Works seamlessly once SSH key is added
+   git push origin main
+   ```
+   - If passphrase set → prompt once per session (cached by agent).
+
+2. **PAT Workflow**:
+   ```bash
+   git clone https://github.com/user/repo.git
+   # Prompt for username + PAT
+   git push origin main
+   ```
+   - Credential manager stores PAT for future pushes.
+
+---
+
+## 🧠 Pro-Level Takeaway
+- **SSH = persistent identity** tied to your machine.
+- **PAT = temporary password** tied to your account.
+- Use **SSH for dev**, **PAT for automation**.
+- Always prefer **ED25519 SSH keys** and **fine-grained PATs**.
+- Passphrase = optional but recommended for SSH; PATs don’t have passphrases.
+
+---

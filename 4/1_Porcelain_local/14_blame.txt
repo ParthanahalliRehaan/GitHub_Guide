@@ -1,0 +1,91 @@
+---
+
+# 🧭 Git Blame Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- `git blame` shows **who last modified each line** of a file, along with the commit hash and timestamp.  
+- Useful for debugging, accountability, and understanding code history.  
+👉 Think of it as “line-by-line detective work.”
+
+---
+
+## 🔹 2. Basic Usage
+```bash
+git blame app.js
+```
+- Displays commit hash, author, date, and line content for each line in `app.js`.
+
+---
+
+## 🔹 3. Advanced Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `-L <start>,<end>` | Limit output to specific line range | `git blame -L 10,20 app.js` |
+| `--show-email` | Show author emails instead of names | `git blame --show-email app.js` |
+| `--date=iso` | Show ISO date format | `git blame --date=iso app.js` |
+| `-C` | Detect moved/copied code across files | `git blame -C app.js` |
+| `-M` | Detect moved code within the same file | `git blame -M app.js` |
+| `--reverse` | Show commits that removed lines | `git blame --reverse app.js` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Find who introduced a bug
+You see a suspicious line in `auth.js`:
+```bash
+git blame auth.js -L 50,60
+```
+👉 Shows who last touched lines 50–60.
+
+---
+
+### Scenario B: Show author emails
+You want email addresses for accountability:
+```bash
+git blame --show-email auth.js
+```
+
+---
+
+### Scenario C: Track moved code
+A function was copied from another file, and you want to trace it:
+```bash
+git blame -C utils.js
+```
+
+---
+
+### Scenario D: Detect moved code within the same file
+A block of code was refactored:
+```bash
+git blame -M app.js
+```
+
+---
+
+### Scenario E: See who deleted a line
+You want to know which commit removed a line:
+```bash
+git blame --reverse app.js
+```
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git blame file` | Show who modified each line |
+| `git blame -L 10,20 file` | Limit to specific lines |
+| `git blame --show-email file` | Show author emails |
+| `git blame -C file` | Detect moved/copied code across files |
+| `git blame -M file` | Detect moved code within file |
+| `git blame --reverse file` | Show commits that removed lines |
+
+---
+
+✅ That’s the **full advanced breakdown of `git blame`** — your forensic tool for line-level history.  

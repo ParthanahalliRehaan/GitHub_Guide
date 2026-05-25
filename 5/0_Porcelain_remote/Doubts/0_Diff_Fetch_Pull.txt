@@ -1,0 +1,109 @@
+---
+
+# 🔹 Git Fetch vs Git Pull — Detailed Scenario Summary
+
+## 1. Core Behavior
+- **`git fetch`**  
+  - Downloads commits from remote into tracking branches (e.g., `origin/main`).  
+  - Does **not** change your local branch.  
+  - Safe, no merge/rebase happens automatically.  
+
+- **`git pull`**  
+  - Runs `fetch` first.  
+  - Then integrates changes into your local branch.  
+  - By default → **merge**.  
+  - With `--rebase` or config → **rebase**.
+
+---
+
+## 2. Tracking Branches (`origin/main`)
+- `origin` = default name for the remote you cloned from.  
+- `main` = branch name on that remote.  
+- `origin/main` = “the remote’s main branch as last fetched.”  
+- You *can* rename `origin` (e.g., `not_origin`), then it becomes `not_origin/main`.  
+- These are **references**, not new branches you actively work on.
+
+---
+
+## 3. Scenario A: Remote Ahead
+Local branch: **A → B**  
+Remote branch: **A → B → C**
+
+```bash
+git fetch origin
+# Local main: A → B
+# origin/main: A → B → C
+```
+
+```bash
+git pull origin main
+# Local main: A → B → C
+# origin/main: A → B → C
+```
+
+👉 Fetch updates tracking only. Pull integrates immediately.
+
+---
+
+## 4. Scenario B: Divergence
+Local branch: **A → B → D**  
+Remote branch: **A → B → C**
+
+```bash
+git fetch origin
+# Local main: A → B → D
+# origin/main: A → B → C
+```
+
+### Merge after fetch:
+```bash
+git merge origin/main
+# Local main: A → B → C → D (with merge commit)
+```
+
+### Rebase after fetch:
+```bash
+git rebase origin/main
+# Local main: A → B → C → D (linear history, no merge commit)
+```
+
+### Pull (default = merge):
+```bash
+git pull origin main
+# Local main: A → B → C → D (merge commit if diverged)
+```
+
+### Pull with rebase:
+```bash
+git pull --rebase origin main
+# Local main: A → B → C → D (linear history)
+```
+
+---
+
+## 5. Merge vs Rebase in Pull
+- **Merge (default)**  
+  - Keeps both histories.  
+  - Creates a merge commit if diverged.  
+  - Safer, preserves context.  
+
+- **Rebase (optional)**  
+  - Linearizes history.  
+  - Replays your commits on top of remote.  
+  - Cleaner history, but rewrites commit IDs.  
+
+---
+
+## 6. Key Takeaways
+- `fetch` = “Bring me the news, don’t touch my draft.”  
+- `merge` = “Update my draft with the news, keeping both versions.”  
+- `rebase` = “Rewrite my draft on top of the news, making it look linear.”  
+- `pull` = “Fetch + integrate immediately” → merge by default, rebase if configured.  
+- **No new branch is created by fetch** — only tracking references (`origin/main`) are updated.
+
+---
+
+✅ This is the **complete detailed summary with code**.  
+You now have: definitions, scenarios (A-B-C timeline), divergence handling, and explicit code examples for fetch, pull, merge, and rebase.
+
+---

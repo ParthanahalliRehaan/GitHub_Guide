@@ -1,0 +1,176 @@
+---
+
+# 🧭 Git Log Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. Basic Usage
+```bash
+git log
+```
+**Purpose**:  
+- Displays the **commit history** of your repository.  
+- Each entry shows commit ID (SHA), author, date, and message.  
+- Default view is verbose and chronological (newest first).
+
+---
+
+## 🔹 2. Output Example
+```
+commit 1a2b3c4d5e6f7g8h9i0j
+Author: Rehaan <rehaan@example.com>
+Date:   Mon May 25 16:00 2026 +0530
+
+    Add login feature
+```
+
+---
+
+## 🔹 3. Common Options
+
+| Flag | Meaning | Example |
+|------|---------|---------|
+| `--oneline` | Compact view (SHA + message) | `git log --oneline` |
+| `--graph` | ASCII graph of branches/merges | `git log --graph` |
+| `--decorate` | Show branch/tag names | `git log --decorate` |
+| `--stat` | Show file changes summary | `git log --stat` |
+| `-p` | Show patch (diff) for each commit | `git log -p` |
+| `--name-only` | Show only filenames changed | `git log --name-only` |
+| `--name-status` | Show filenames + status (A/M/D) | `git log --name-status` |
+
+---
+
+### Compact Visual Log
+```bash
+git log --oneline --graph --decorate
+```
+Output:
+```
+* 1a2b3c4 (HEAD -> main, origin/main) Add login feature
+* 9z8y7x6 Fix typo in README
+* 5w4v3u2 Initial commit
+```
+👉 Great for quick branch visualization.
+
+---
+
+### Show File Changes
+```bash
+git log --stat
+```
+Output:
+```
+commit 1a2b3c4
+ Author: Rehaan
+ Date: Mon May 25 16:00 2026
+
+ Add login feature
+
+ src/app.js | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+```
+
+---
+
+### Show Diffs
+```bash
+git log -p
+```
+- Displays the actual code changes for each commit.  
+- Useful for reviewing history in detail.
+
+---
+
+## 🔹 4. Filtering & Searching
+
+### Limit Number of Commits
+```bash
+git log -n 5
+```
+- Show only last 5 commits.
+
+### Filter by Author
+```bash
+git log --author="Rehaan"
+```
+
+### Filter by Date
+```bash
+git log --since="2026-05-01" --until="2026-05-25"
+```
+
+### Filter by Message
+```bash
+git log --grep="feature"
+```
+
+### Filter by Path
+```bash
+git log -- src/app.js
+```
+- Show commits affecting a specific file.
+
+---
+
+## 🔹 5. Pretty Formats
+
+### Custom Format
+```bash
+git log --pretty=format:"%h - %an, %ar : %s"
+```
+Output:
+```
+1a2b3c4 - Rehaan, 2 hours ago : Add login feature
+9z8y7x6 - Rehaan, 1 day ago : Fix typo
+```
+
+**Common placeholders**:
+- `%h` → short commit hash  
+- `%an` → author name  
+- `%ar` → relative date  
+- `%s` → subject (commit message)  
+
+---
+
+### Predefined Formats
+- `--pretty=oneline` → one commit per line.  
+- `--pretty=short` → short author + message.  
+- `--pretty=full` → full author + committer info.  
+- `--pretty=fuller` → even more metadata.  
+
+---
+
+## 🔹 6. Advanced Visualizations
+
+### Show Branch History
+```bash
+git log --oneline --graph --all
+```
+- Shows all branches in one graph.  
+
+### Show Reflog (local HEAD movements)
+```bash
+git reflog
+```
+- Not exactly `log`, but shows HEAD changes (resets, checkouts, rebases).  
+
+---
+
+## 🔹 7. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git log` | Full commit history |
+| `git log --oneline` | Compact view |
+| `git log --graph --decorate` | Visual branch graph |
+| `git log --stat` | File change summary |
+| `git log -p` | Show diffs per commit |
+| `git log --author="X"` | Filter by author |
+| `git log --grep="X"` | Filter by commit message |
+| `git log --since="date"` | Filter by date |
+| `git log -- src/file` | Filter by file |
+| `git log --pretty=format:"..."` | Custom output format |
+
+---
+
+✅ That’s the **full breakdown of `git log`** — from basic commit history to advanced filtering, searching, and visualization.
+
+---

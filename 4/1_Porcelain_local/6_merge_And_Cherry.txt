@@ -1,0 +1,249 @@
+---
+
+# 🧭 Git Merge Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. Basic Merge
+```bash
+git merge feature-x
+```
+**Purpose**:  
+- Combines changes from another branch into the current branch.  
+- Git tries to auto-merge; if histories diverge, it may create a merge commit.  
+
+---
+
+## 🔹 2. Merge Types
+
+### 1. Fast-Forward Merge
+```bash
+git merge feature-x
+```
+- Happens when the target branch has no new commits since branching.  
+- Git simply moves the branch pointer forward.  
+- No merge commit created.  
+👉 History stays linear.
+
+---
+
+### 2. No Fast-Forward Merge
+```bash
+git merge --no-ff feature-x
+```
+- Forces a merge commit even if fast-forward is possible.  
+- Preserves branch identity in history.  
+👉 Useful for feature branches (you see exactly when they were merged).
+
+---
+
+### 3. Squash Merge
+```bash
+git merge --squash feature-x
+git commit -m "Squash feature-x"
+```
+- Combines all commits from the branch into **one commit**.  
+- Keeps history clean, but loses individual commit granularity.  
+👉 Great for experimental branches.
+
+---
+
+### 4. Merge with Strategy Options
+```bash
+git merge -s recursive
+git merge -s ours
+git merge -s theirs
+```
+
+- **recursive** (default): Best for two branches, handles conflicts intelligently.  
+- **ours**: Keeps current branch’s changes, ignores incoming.  
+- **theirs**: Opposite — takes incoming branch’s changes.  
+- **octopus**: Used for merging multiple branches at once.  
+- **resolve**: Simple 3-way merge, less advanced than recursive.
+
+---
+
+## 🔹 3. Conflict Resolution
+
+When Git can’t auto-merge, you’ll see conflict markers in files:
+```diff
+<<<<<<< HEAD
+Current branch changes
+=======
+Incoming branch changes
+>>>>>>> feature-x
+```
+
+### Steps to Resolve:
+1. Edit files manually to fix conflicts.  
+2. Stage resolved files:
+   ```bash
+   git add conflicted-file.txt
+   ```
+3. Complete merge:
+   ```bash
+   git commit
+   ```
+
+---
+
+## 🔹 4. Useful Merge Flags
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--no-ff` | Force merge commit | `git merge --no-ff feature-x` |
+| `--squash` | Squash commits into one | `git merge --squash feature-x` |
+| `--abort` | Cancel ongoing merge | `git merge --abort` |
+| `--continue` | Resume after resolving conflicts | `git merge --continue` |
+| `-s <strategy>` | Choose merge strategy | `git merge -s ours feature-x` |
+| `--allow-unrelated-histories` | Merge repos with no common base | `git merge --allow-unrelated-histories other-repo` |
+
+---
+
+## 🔹 5. Advanced Merge Workflows
+
+### Merge Multiple Branches
+```bash
+git merge branch1 branch2 branch3
+```
+- Uses **octopus strategy**.  
+- Good for integrating many topic branches at once.
+
+### Abort Merge
+```bash
+git merge --abort
+```
+- Cancels merge and resets to pre-merge state.  
+- Useful if conflicts are too complex.
+
+### Continue Merge
+```bash
+git merge --continue
+```
+- After resolving conflicts, continue merge process.
+
+---
+
+## 🔹 6. Summary Table
+
+| Merge Type | Command | Purpose |
+|------------|---------|---------|
+| Fast-forward | `git merge branch` | Moves pointer forward, no commit |
+| No-FF | `git merge --no-ff branch` | Creates merge commit |
+| Squash | `git merge --squash branch` | One combined commit |
+| Strategy: ours | `git merge -s ours branch` | Keep current branch changes |
+| Strategy: theirs | `git merge -s theirs branch` | Take incoming branch changes |
+| Strategy: recursive | `git merge -s recursive branch` | Default, smart 3-way merge |
+| Strategy: octopus | `git merge branch1 branch2` | Merge multiple branches |
+| Abort | `git merge --abort` | Cancel merge |
+| Continue | `git merge --continue` | Resume after conflict resolution |
+
+---
+
+✅ That’s the **full breakdown of merging** — from fast-forward to squash, strategies, conflict resolution, and advanced flags.
+
+            ---
+            Alright, continuing the **Advanced Series** — now we’ll break down **`git cherry-pick`**, the surgical tool for applying specific commits across branches.  
+
+            ---
+
+            # 🧭 Git Cherry-Pick Deep Dive (V2)
+
+            ---
+
+            ## 🔹 1. Definition & Purpose
+            - `git cherry-pick` applies the changes from a specific commit onto your current branch.  
+            - Useful when you want **just one commit** (or a few) without merging the entire branch.  
+            👉 Think of it as “plucking” a single cherry (commit) from one branch and dropping it onto another.
+
+            ---
+
+            ## 🔹 2. Basic Usage
+            ```bash
+            git cherry-pick <commit-hash>
+            ```
+            - Applies the commit identified by `<commit-hash>` onto the current branch.  
+            - Creates a new commit with the same changes but a new SHA.
+
+            ---
+
+            ## 🔹 3. Advanced Options
+
+            | Flag | Purpose | Example |
+            |------|---------|---------|
+            | `-n` | Apply changes without committing (keeps them staged) | `git cherry-pick -n a1b2c3` |
+            | `--continue` | Resume after resolving conflicts | `git cherry-pick --continue` |
+            | `--abort` | Cancel cherry-pick and restore state | `git cherry-pick --abort` |
+            | `--skip` | Skip the problematic commit | `git cherry-pick --skip` |
+            | `-x` | Add a note in commit message about original commit | `git cherry-pick -x a1b2c3` |
+            | `-m <parent-number>` | Cherry-pick a merge commit (choose parent) | `git cherry-pick -m 1 <merge-commit>` |
+
+            ---
+
+            ## 🔹 4. Scenario Walkthrough
+
+            ### Scenario A: Apply a bug fix from another branch
+            You’re on `feature-login` and want a bug fix from `main`:
+            ```bash
+            git checkout feature-login
+            git cherry-pick a1b2c3
+            ```
+
+            ---
+
+            ### Scenario B: Apply multiple commits
+            You want commits `A`, `B`, and `C` from `feature-ui`:
+            ```bash
+            git checkout feature-login
+            git cherry-pick A B C
+            ```
+
+            ---
+
+            ### Scenario C: Apply commit but keep staged
+            You want to review changes before committing:
+            ```bash
+            git cherry-pick -n d4e5f6
+            # inspect staged changes
+            git commit -m "Selective fix after review"
+            ```
+
+            ---
+
+            ### Scenario D: Handle conflicts
+            Cherry-picking commit `g7h8i9` causes conflicts:
+            ```bash
+            # resolve conflicts manually
+            git add conflicted-file.js
+            git cherry-pick --continue
+            ```
+            If too messy:
+            ```bash
+            git cherry-pick --abort
+            ```
+
+            ---
+
+            ### Scenario E: Cherry-pick a merge commit
+            You want only one parent’s changes from a merge commit:
+            ```bash
+            git cherry-pick -m 1 h1i2j3
+            ```
+
+            ---
+
+            ## 🔹 5. Summary Table
+
+            | Command | Purpose |
+            |---------|---------|
+            | `git cherry-pick <hash>` | Apply commit onto current branch |
+            | `git cherry-pick A B C` | Apply multiple commits |
+            | `git cherry-pick -n <hash>` | Apply changes without committing |
+            | `git cherry-pick --continue` | Resume after conflict resolution |
+            | `git cherry-pick --abort` | Cancel cherry-pick |
+            | `git cherry-pick --skip` | Skip problematic commit |
+            | `git cherry-pick -x <hash>` | Add note about original commit |
+            | `git cherry-pick -m <n> <merge-commit>` | Cherry-pick merge commit (choose parent) |
+
+            ---
+
+            ✅ That’s the **full advanced breakdown of `git cherry-pick`** — precise, surgical commit application.  
+

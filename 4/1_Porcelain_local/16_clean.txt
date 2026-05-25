@@ -1,0 +1,94 @@
+---
+
+# 🧭 Git Clean Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- `git clean` removes **untracked files and directories** from your working tree.  
+- Helps keep your repo clean from build artifacts, temporary files, or clutter.  
+👉 Think of it as Git’s “vacuum cleaner” for your workspace.  
+
+⚠️ **Warning**: It permanently deletes files — use with caution.
+
+---
+
+## 🔹 2. Basic Usage
+```bash
+git clean -n   # dry run (preview what will be deleted)
+git clean -f   # delete untracked files
+git clean -fd  # delete untracked files + directories
+```
+
+---
+
+## 🔹 3. Advanced Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `-n` | Dry run (show what would be deleted) | `git clean -n` |
+| `-f` | Force deletion | `git clean -f` |
+| `-d` | Include untracked directories | `git clean -fd` |
+| `-x` | Remove ignored files too | `git clean -fx` |
+| `-X` | Remove only ignored files | `git clean -fX` |
+| `-e <pattern>` | Exclude files matching pattern | `git clean -f -e *.log` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Preview cleanup
+You want to see what would be deleted:
+```bash
+git clean -n
+```
+
+---
+
+### Scenario B: Remove untracked files
+Your repo is cluttered with test files:
+```bash
+git clean -f
+```
+
+---
+
+### Scenario C: Remove untracked directories
+You have build folders like `dist/` or `out/`:
+```bash
+git clean -fd
+```
+
+---
+
+### Scenario D: Remove ignored files
+You want to clear `.log` files and build artifacts listed in `.gitignore`:
+```bash
+git clean -fx
+```
+
+---
+
+### Scenario E: Keep certain files
+You want to clean everything except `.env`:
+```bash
+git clean -f -e .env
+```
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git clean -n` | Preview what will be deleted |
+| `git clean -f` | Delete untracked files |
+| `git clean -fd` | Delete untracked files + directories |
+| `git clean -fx` | Delete ignored + untracked files |
+| `git clean -fX` | Delete only ignored files |
+| `git clean -f -e <pattern>` | Exclude files from deletion |
+
+---
+
+✅ That’s the **full advanced breakdown of `git clean`** — your workspace cleanup tool.  
+

@@ -1,0 +1,114 @@
+---
+
+# 🖥️ Step 1: Install Git on Windows
+
+1. **Download Git for Windows**  
+   👉 [https://git-scm.com/download/win](https://git-scm.com/download/win)
+
+2. **Run the installer**  
+   During installation, you’ll see several options. The most important is:
+
+   ### PATH Environment Options
+   - **Git from Git Bash only**  
+     - Git is only usable inside Git Bash.  
+     - ❌ Not available in PowerShell, Command Prompt, or VS Code.
+   - **Git from the command line and also from 3rd‑party software (Recommended)**  
+     - The installer **adds Git’s folder (`C:\Program Files\Git\cmd`) to the PATH environment variable**.  
+     - ✅ Git works everywhere: Git Bash, PowerShell, Command Prompt, VS Code, and other tools.  
+   - **Git and Unix tools from the command line**  
+     - Adds Git plus Unix utilities (like `ls`, `grep`) globally.  
+     - ⚠️ Can conflict with Windows tools (e.g., `find.exe`).
+
+   👉 Choose **“Git from the command line and also from 3rd‑party software.”**
+
+3. **Verify installation**
+
+```powershell
+# Open PowerShell or Command Prompt
+git --version   # Should print something like: git version 2.44.0.windows.1
+```
+
+---
+
+# 🐧 Step 2: Install WSL (Windows Subsystem for Linux)
+
+1. **Open PowerShell as Administrator**  
+2. **Install WSL with default Ubuntu distro:**
+
+```powershell
+# Installs WSL with Ubuntu (default)
+wsl --install
+
+# If you want a specific distro (e.g., Ubuntu 22.04):
+wsl --install -d Ubuntu-22.04
+```
+
+3. **Restart your computer** if prompted.  
+4. **Launch WSL** by typing `wsl` in PowerShell or searching “Ubuntu” in Start Menu.  
+
+5. **Check installed distributions:**
+
+```powershell
+# Lists installed distros
+wsl --list --verbose
+
+# Update WSL itself
+wsl --update
+```
+
+---
+
+# 🛠️ Step 3: Install Git inside WSL (Linux environment)
+
+Once inside WSL (Ubuntu/Debian):
+
+```bash
+# Update package lists
+sudo apt update   # Refreshes available packages
+
+# Install Git
+sudo apt install git -y
+
+# Verify installation
+git --version     # Should print: git version 2.44.0 (or similar)
+```
+
+---
+
+# 📂 Step 4: PATH Environment Explained (Corrected)
+
+- The **installer must explicitly add Git’s folder to PATH**.  
+- PATH is a system variable that tells Windows where to look for executables.  
+- By adding `C:\Program Files\Git\cmd` to PATH, the installer ensures that typing `git` works everywhere.
+
+### Example
+
+```powershell
+# Show PATH variable in PowerShell
+echo $env:PATH
+
+# You should see something like:
+# ...;C:\Program Files\Git\cmd;...
+```
+
+If Git’s folder isn’t there, you can add it manually:  
+**Control Panel → System → Advanced system settings → Environment Variables → PATH → Edit → Add `C:\Program Files\Git\cmd`**
+
+---
+
+# ✅ Easy Analogy
+
+Think of PATH as a **city map of addresses**.  
+- Before installation, Windows doesn’t know Git’s address.  
+- The installer writes Git’s address into the map (PATH).  
+- Now, whenever you say “find Git,” Windows looks at the map and goes straight to the right place.
+
+---
+
+# 🎯 Summary
+
+- **Windows Git** → Installed via `.exe`, installer updates PATH so Git works everywhere.  
+- **WSL Git** → Installed via `apt` inside Linux.  
+- Both environments now have Git, but configs are separate.  
+
+---

@@ -1,0 +1,75 @@
+---
+
+# 🧭 Git Reset Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- Moves the `HEAD` pointer to a different commit.  
+- Controls whether changes remain staged, unstaged, or discarded.  
+👉 Think of it as “rewinding” history with different levels of preservation.
+
+---
+
+## 🔹 2. Basic Reset Usage
+```bash
+git reset file.txt        # unstage file
+git reset --soft HEAD~1   # undo commit, keep staged
+git reset --mixed HEAD~1  # undo commit, keep unstaged
+git reset --hard HEAD~1   # undo commit, discard changes
+```
+
+---
+
+## 🔹 3. Advanced Reset Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--soft` | Undo commit, keep changes staged | `git reset --soft HEAD~2` |
+| `--mixed` | Undo commit, keep changes unstaged (default) | `git reset --mixed HEAD~2` |
+| `--hard` | Undo commit, discard changes | `git reset --hard HEAD~2` |
+| `--merge` | Reset but keep unmerged changes | `git reset --merge` |
+| `--keep` | Reset but keep local changes if possible | `git reset --keep` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Undo a bad commit but keep changes staged
+You committed debug logs by mistake:
+```bash
+git reset --soft HEAD~1
+# fix files
+git commit -m "Clean commit without logs"
+```
+
+### Scenario B: Undo commit but keep changes unstaged
+You want to re-edit files before recommitting:
+```bash
+git reset --mixed HEAD~1
+# now files are unstaged, ready for editing
+```
+
+### Scenario C: Completely discard changes
+You realize the last commit and edits were wrong:
+```bash
+git reset --hard HEAD~1
+```
+⚠️ This permanently deletes changes.
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git reset file.txt` | Unstage file |
+| `git reset --soft HEAD~n` | Undo commit, keep staged |
+| `git reset --mixed HEAD~n` | Undo commit, keep unstaged |
+| `git reset --hard HEAD~n` | Undo commit, discard changes |
+| `git reset --merge` | Reset but keep unmerged changes |
+| `git reset --keep` | Reset but keep local changes if possible |
+
+---
+
+✅ That’s the **full advanced breakdown of `git reset`**.  

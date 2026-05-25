@@ -1,0 +1,75 @@
+---
+
+## 📝 Getting Started
+- **Open a file:** `vim filename`
+- **Interactive tutorial:** `vimtutor`
+- **Help system:** `:help`
+
+---
+
+## 🔄 Modes in Vim
+- **Normal mode (default):** Navigation & commands → press `<Esc>`
+- **Insert mode:** Typing text → `i` (before cursor), `a` (after cursor), `o` (new line below), `O` (new line above)
+- **Visual mode:** Select text → `v` (character), `V` (line), `<C-v>` (block)
+- **Command mode:** Execute commands → `:` at bottom
+- **Replace mode:** Overwrite text → `R`
+
+---
+
+## 🎯 Navigation
+- **Character movement:** `h` (left), `l` (right)
+- **Line movement:** `0` (line start), `^` (first non-blank), `$` (line end)
+- **Word movement:** `w` (next word), `b` (previous word), `e` (end of word)
+- **Screen movement:** `H` (top), `M` (middle), `L` (bottom), `<C-f>` (page down), `<C-b>` (page up)
+- **File movement:** `gg` (top of file), `G` (bottom), `nG` (go to line n)
+
+---
+
+## ✂️ Editing
+- **Delete:** `x` (char), `dd` (line), `dw` (word), `D` (to end of line)
+- **Change:** `cw` (change word), `cc` (change line), `C` (to end of line)
+- **Replace:** `r` (single char), `R` (replace mode)
+- **Copy & Paste:** `yy` (copy line), `yw` (copy word), `p` (paste after), `P` (paste before)
+
+---
+
+## 💾 Saving & Quitting
+- **Save:** `:w`
+- **Save & quit:** `:wq`
+- **Quit:** `:q`
+- **Quit without saving:** `:q!`
+
+---
+
+## 🔍 Search & Replace
+- **Search:** `/pattern` → `n` (next), `N` (previous)
+- **Replace:** `:%s/old/new/g` (replace all in file)
+
+---
+
+## 📑 Useful Extras
+- **Undo/Redo:** `u` (undo), `<C-r>` (redo)
+- **Line numbers:** `:set number` (show), `:set nonumber` (hide)
+- **Syntax highlighting:** `:syntax on`
+
+---
+
+## ⚡ Quick Reference Table
+
+| Action            | Command Example |
+|-------------------|-----------------|
+| Open file         | `vim file.txt` |
+| Insert text       | `i`, `a`, `o`, `O` |
+| Save & quit       | `:wq` |
+| Quit no save      | `:q!` |
+| Move cursor       | `h`, `j`, `k`, `l` |
+| Copy/Paste        | `yy`, `p` |
+| Delete line       | `dd` |
+| Search            | `/word` |
+| Replace           | `:%s/foo/bar/g` |
+
+---
+
+👉 For a full GitHub-hosted cheat sheet, you can check this repository:  [Github](https://github.com/bjarneo/vim-cheatsheet)
+
+

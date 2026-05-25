@@ -1,0 +1,92 @@
+---
+
+# 🧭 Git Tag Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- Tags are **markers** attached to specific commits.  
+- Commonly used for **releases, milestones, or versioning**.  
+👉 Think of them as “bookmarks” in your project history.
+
+---
+
+## 🔹 2. Basic Tag Usage
+```bash
+git tag v1.0                     # lightweight tag
+git tag -a v1.0 -m "Release 1.0" # annotated tag
+git tag -d v1.0                  # delete tag
+git tag --list                   # list all tags
+```
+
+---
+
+## 🔹 3. Types of Tags
+- **Lightweight tag** → just a pointer to a commit.  
+- **Annotated tag** → includes metadata (author, date, message).  
+- **Signed tag** → cryptographically signed with GPG for authenticity.  
+
+---
+
+## 🔹 4. Advanced Tag Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `-a` | Annotated tag with message | `git tag -a v2.0 -m "Release 2.0"` |
+| `-s` | Signed tag (requires GPG setup) | `git tag -s v2.0 -m "Signed release"` |
+| `-f` | Force overwrite existing tag | `git tag -f v1.0` |
+| `--delete` | Delete tag | `git tag --delete v1.0` |
+| `--list "pattern"` | Filter tags | `git tag --list "v1.*"` |
+
+---
+
+## 🔹 5. Scenario Walkthrough
+
+### Scenario A: Mark a release
+You finish the login feature and want to mark it as version 1.1:
+```bash
+git tag -a v1.1 -m "Login feature release"
+```
+
+---
+
+### Scenario B: Correct a tag
+You accidentally tagged the wrong commit:
+```bash
+git tag -f v1.1
+```
+
+---
+
+### Scenario C: Signed release
+For security, you want to sign a release:
+```bash
+git tag -s v2.0 -m "Signed release"
+```
+
+---
+
+### Scenario D: List and filter tags
+You want to see only version 1.x tags:
+```bash
+git tag --list "v1.*"
+```
+
+---
+
+## 🔹 6. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git tag vX.Y` | Create lightweight tag |
+| `git tag -a vX.Y -m "msg"` | Create annotated tag |
+| `git tag -s vX.Y -m "msg"` | Create signed tag |
+| `git tag -d vX.Y` | Delete tag |
+| `git tag --list` | List all tags |
+| `git tag --list "pattern"` | Filter tags |
+| `git tag -f vX.Y` | Force overwrite tag |
+
+---
+
+✅ That’s the **full advanced breakdown of `git tag`**.  
+

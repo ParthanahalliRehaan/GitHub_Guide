@@ -1,0 +1,141 @@
+---
+
+## 🔧 Git Plumbing Basics
+
+Git has two layers:
+- **Porcelain commands** (user‑friendly, e.g., `git commit`, `git log`).
+- **Plumbing commands** (low‑level, internal, e.g., `git cat-file`, `git rev-parse`).
+
+Plumbing is about understanding how Git stores and links objects inside `.git/objects`.
+
+---
+
+## 🧱 Git Object Types
+
+1. **Commit object**
+   - Identified by a SHA‑1/SHA‑256 hash (40 chars, but usually 7+ chars are enough for uniqueness).
+   - Contains:
+     - A pointer to a **tree object**.
+     - Parent commit(s).
+     - Author/committer info.
+     - Commit message.
+
+2. **Tree object**
+   - Represents a directory.
+   - Contains references to blobs (files) and other trees (subdirectories).
+
+3. **Blob object**
+   - Raw file content (no metadata like filename).
+
+4. **Tag object**
+   - Human‑readable reference to a commit (annotated tags store metadata).
+
+---
+
+## 🔍 Exploring Objects
+
+### 1. View commit history
+```bash
+git log --oneline
+```
+- Shows short commit hashes (first 7 chars).
+- Example: `68a74ff Commit message`
+
+### 2. Inspect a commit
+```bash
+git cat-file -p 68a74ff
+```
+Output:
+```
+tree 9fceb02...
+parent 1a410ef...
+author Rehaan <rehaan@example.com> 1620000000 +0530
+committer Rehaan <rehaan@example.com> 1620000000 +0530
+
+Initial commit
+```
+
+### 3. Inspect the tree
+```bash
+git cat-file -p 9fceb02
+```
+Output:
+```
+100644 blob 3b18e51...    file1.txt
+100644 blob 5d41402...    file2.txt
+040000 tree 7d1f3a2...    src
+```
+
+### 4. Inspect a blob
+```bash
+git cat-file -p 3b18e51
+```
+Output:
+```
+Hello World
+```
+
+---
+
+## 📂 Directly Accessing `.git/objects`
+
+Objects are stored as compressed files:
+- Path format: `.git/objects/<first two chars>/<remaining chars>`
+- Example: commit `6874ff...` → `.git/objects/68/74ffyff...`
+
+You can inspect raw content:
+```bash
+cat .git/objects/68/74ffyff... > temp.txt
+xxd .git/objects/68/74ffyff... > temp.txt
+```
+
+---
+
+## 🔗 Finding References
+
+Refs store branch/tag pointers:
+```bash
+find .git | grep refs
+```
+Examples:
+- `.git/refs/heads/main`
+- `.git/refs/tags/v1.0`
+
+Each file contains the commit hash it points to.
+
+---
+
+## 📖 Scenario Walkthrough
+
+Imagine you want to trace a file back to its commit:
+
+1. Run `git log --oneline` → get commit hash.
+2. Use `git cat-file -p <commit>` → find tree hash.
+3. Use `git cat-file -p <tree>` → locate blob hash for your file.
+4. Use `git cat-file -p <blob>` → see file content at that commit.
+
+This is how Git internally reconstructs your project state.
+
+---
+
+## ⚡ Quick Reference Commands
+
+```bash
+# Show commit object
+git cat-file -p <commit-hash>
+
+# Show tree object
+git cat-file -p <tree-hash>
+
+# Show blob object
+git cat-file -p <blob-hash>
+
+# Show type of object
+git cat-file -t <hash>
+
+# Show size of object
+git cat-file -s <hash>
+```
+
+---
+

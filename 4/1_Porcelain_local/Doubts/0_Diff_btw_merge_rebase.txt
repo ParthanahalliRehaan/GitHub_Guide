@@ -1,0 +1,64 @@
+---
+
+## 🔀 Merge
+- **What it does:** Creates a new commit that ties together two branches’ histories. Preserves the chronological order of commits.
+- **Pros:** Keeps full history intact, easy to trace what happened and when.
+- **Cons:** Can lead to “messy” history with lots of merge commits.
+
+### Example
+```bash
+# Assume you're on feature branch
+git checkout feature
+
+# Merge main into feature
+git merge main
+```
+
+Result:  
+- Git creates a **merge commit** combining both histories.  
+- History looks like a graph with branches converging.
+
+---
+
+## 📐 Rebase
+- **What it does:** Moves your branch’s commits on top of another branch, rewriting history.
+- **Pros:** Cleaner, linear history; easier to bisect/debug.
+- **Cons:** Dangerous if used on shared branches (rewrites history others may rely on).
+
+### Example
+```bash
+# Assume you're on feature branch
+git checkout feature
+
+# Rebase feature onto main
+git rebase main
+```
+
+Result:  
+- Git “replays” your commits as if they were made after the latest commits on `main`.  
+- History looks like a straight line.
+
+---
+
+## ⚡ Advanced Differences
+
+| Aspect | Merge | Rebase |
+|--------|-------|--------|
+| **History Style** | Non-linear, preserves all branch structures | Linear, rewrites commit history |
+| **Conflict Handling** | Conflicts resolved once at merge commit | Conflicts may need resolving at each commit replay |
+| **Audit/Traceability** | Shows exactly when branches diverged and merged | Looks cleaner but hides branching context |
+| **Collaboration** | Safe for shared branches | Risky if rebasing public/shared branches |
+| **Commit IDs** | Old commits remain unchanged | Commit hashes change (new commits created) |
+| **Use Case** | Preserving project history, team workflows | Cleaning up before merging, personal/local branches |
+
+---
+
+## 🧠 Strategic Analogy
+Think of **merge** as stitching two ropes together with a knot — the knot (merge commit) shows exactly where they joined.  
+Think of **rebase** as untying one rope and re-threading it so it looks like it was always part of the other rope — no knot, just a smooth line.
+
+---
+
+👉 My recommendation for advanced workflows:
+- Use **merge** for team collaboration (audit trail matters).  
+- Use **rebase** locally before PRs to clean history (linear commits, easier review).  

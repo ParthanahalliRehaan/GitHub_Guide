@@ -1,0 +1,180 @@
+---
+
+## 🛠️ 1. Installation
+
+**Scenario:** You want to install GitHub CLI (`gh`) on your system.
+
+- **Command (Linux/macOS via Homebrew):**
+  ```bash
+  brew install gh
+  ```
+- **Command (Windows via winget):**
+  ```powershell
+  winget install --id GitHub.cli
+  ```
+- **Output:**
+  ```
+  Found GitHub CLI [GitHub.cli]
+  Installing...
+  Successfully installed GitHub CLI
+  ```
+
+---
+
+## ⚙️ 2. Authentication & Config
+
+**Scenario:** You want to log in to GitHub from the CLI.
+
+- **Command:**
+  ```bash
+  gh auth login
+  ```
+- **Interactive Flow:**
+  ```
+  ? What account do you want to log into? GitHub.com
+  ? What is your preferred protocol for Git operations? HTTPS
+  ? Authenticate Git with your GitHub credentials? Yes
+  ? How would you like to authenticate GitHub CLI? Login with a web browser
+  ```
+- **Output after success:**
+  ```
+  ✓ Authentication complete.
+  ✓ Configured git protocol
+  ```
+
+- **Check config:**
+  ```bash
+  gh config list
+  ```
+  Output:
+  ```
+  git_protocol=https
+  editor=vim
+  prompt=enabled
+  ```
+
+---
+
+## 📂 3. Repository Management
+
+**Scenario A: Create a new repo from CLI**
+```bash
+gh repo create my-new-repo --public --source=. --remote=origin --push
+```
+Output:
+```
+✓ Created repository Rehaan/my-new-repo on GitHub
+✓ Added remote origin
+✓ Pushed commits to GitHub
+```
+
+**Scenario B: Clone a repo**
+```bash
+gh repo clone microsoft/TypeScript
+```
+Output:
+```
+Cloning into 'TypeScript'...
+remote: Enumerating objects...
+Receiving objects...
+```
+
+---
+
+## 🔀 4. Pull Requests
+
+**Scenario: Create a PR**
+```bash
+gh pr create --title "Fix bug in login" --body "This PR fixes issue #42" --base main --head bugfix/login
+```
+Output:
+```
+✓ Created pull request #101
+https://github.com/Rehaan/my-new-repo/pull/101
+```
+
+**Scenario: Checkout a PR**
+```bash
+gh pr checkout 101
+```
+Output:
+```
+Switched to branch 'bugfix/login'
+```
+
+---
+
+## 🐛 5. Issues
+
+**Scenario: Create an issue**
+```bash
+gh issue create --title "Login page error" --body "Steps to reproduce..."
+```
+Output:
+```
+✓ Created issue #55
+https://github.com/Rehaan/my-new-repo/issues/55
+```
+
+**Scenario: List issues**
+```bash
+gh issue list
+```
+Output:
+```
+#55  Login page error   Open
+#42  API timeout issue  Closed
+```
+
+---
+
+## 📦 6. Releases
+
+**Scenario: Create a release**
+```bash
+gh release create v1.0.0 --title "First Release" --notes "Initial stable release"
+```
+Output:
+```
+✓ Created release v1.0.0
+https://github.com/Rehaan/my-new-repo/releases/tag/v1.0.0
+```
+
+---
+
+## 🔧 7. Config & Aliases
+
+**Scenario: Create alias for quick PR checkout**
+```bash
+gh alias set pc 'pr checkout'
+```
+Output:
+```
+✓ Added alias pc
+```
+
+Now you can run:
+```bash
+gh pc 101
+```
+
+---
+
+## 🧭 8. Useful Everyday Commands
+
+- View repo in browser:
+  ```bash
+  gh repo view --web
+  ```
+- See notifications:
+  ```bash
+  gh notification list
+  ```
+- Run GitHub Actions:
+  ```bash
+  gh run list
+  ```
+
+---
+
+✅ With these scenarios, you’ll treat `gh` like `git`: installation → config → repo → PR → issues → releases → aliases. Each command is practical and mirrors real workflows.

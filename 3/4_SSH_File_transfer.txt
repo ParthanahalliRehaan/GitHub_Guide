@@ -1,0 +1,30 @@
+They -
+    SSH file transfer tools (like scp or sftp)
+
+    Git operations over SSH (like git push, git pull, git clone)
+They *feel* similar because both involve moving data over SSH, but they’re not “almost the same” once you look at what’s actually happening.
+
+### 🚚 SSH File Transfer
+- Purpose: Move raw files from one machine to another.
+- Tools: `scp`, `sftp`.
+- Behavior: No version history, no tracking, just copy/paste over a secure channel.
+- Example: `scp index.html user@server:/var/www/`
+
+### 📚 Git over SSH
+- Purpose: Synchronize **repository states** (commits, branches, tags).
+- Tools: `git push`, `git pull`, `git clone`.
+- Behavior: Transfers *changesets* (diffs, commits), not just files. Maintains full history, authorship, merges.
+- Example: `git push origin main` → sends commit objects, refs, and updates the remote repo.
+
+### ⚖️ Comparison Table
+
+| Aspect              | SSH File Transfer | Git over SSH |
+|---------------------|------------------|--------------|
+| What is moved       | Raw files        | Commits, refs, diffs |
+| Tracking history    | ❌ None           | ✅ Full version history |
+| Collaboration       | Manual overwrite | Structured merges, branches |
+| Typical commands    | `scp`, `sftp`    | `git push`, `git pull`, `git clone` |
+| Use case            | Deploying files  | Collaborative coding |
+
+### 🎯 Bottom Line
+They’re related because Git often *uses SSH as the transport layer*, but Git adds a whole layer of version control logic on top. Saying they’re “almost the same” is like saying **email and postal mail are the same because both deliver messages** — true at a surface level, but the systems and features are very different.

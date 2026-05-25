@@ -1,0 +1,129 @@
+---
+
+# 🧭 Git Commit Deep Dive (V2 with Definitions & Purposes)
+
+## 🔹 1. Basic Usage
+```bash
+git commit -m "Initial commit"
+git commit
+```
+**Purpose**:  
+- Creates a **snapshot** of staged changes in the local repository.  
+- Each commit has:
+  - **SHA ID** (unique hash)
+  - **Author info** (from config)
+  - **Date/time**
+  - **Commit message**
+
+👉 If you don’t use `-m`, Git opens your default editor to write the message.
+
+---
+
+## 🔹 2. Common Options
+
+| Flag | Meaning | Example |
+|------|---------|---------|
+| `-m` | Inline commit message | `git commit -m "Fix bug"` |
+| `-a` | Stage tracked files automatically | `git commit -am "Quick fix"` |
+| `--amend` | Modify last commit | `git commit --amend -m "Better message"` |
+| `--no-edit` | Keep previous commit message (with amend) | `git commit --amend --no-edit` |
+| `--author` | Override author info | `git commit --author="Other <other@example.com>"` |
+| `--date` | Override commit date | `git commit --date="2026-05-25T10:00:00"` |
+| `--signoff` | Add “Signed-off-by” line | `git commit -s -m "Message"` |
+| `--verbose` | Show diff in commit editor | `git commit --verbose` |
+| `--allow-empty` | Create commit with no changes | `git commit --allow-empty -m "Marker commit"` |
+| `--allow-empty-message` | Commit with blank message | `git commit --allow-empty-message -m ""` |
+| `--reset-author` | Reset author to current config (with amend) | `git commit --amend --reset-author` |
+
+---
+
+## 🔹 3. Variations
+
+### Auto-Stage Tracked Files
+```bash
+git commit -am "Update code"
+```
+- Equivalent to `git add -u` + `git commit`.  
+- Only affects **tracked files** (not new ones).
+
+---
+
+### Amend Last Commit
+```bash
+git commit --amend -m "Correct typo"
+```
+- Rewrites the last commit (message or content).  
+- Useful for fixing mistakes.  
+⚠️ Changes commit history — avoid if already pushed.
+
+---
+
+### Signoff
+```bash
+git commit -s -m "Add license"
+```
+- Adds a line:  
+  ```
+  Signed-off-by: Rehaan <rehaan@example.com>
+  ```
+- Used in open-source projects for Developer Certificate of Origin (DCO).
+
+---
+
+### Empty Commit
+```bash
+git commit --allow-empty -m "Trigger CI pipeline"
+```
+- Creates a commit even with no changes.  
+- Useful for triggering builds or marking milestones.
+
+---
+
+## 🔹 4. Advanced Usage
+
+### Multiple Messages
+```bash
+git commit -m "Title" -m "Detailed description"
+```
+- First `-m` is subject line.  
+- Second `-m` is body text.
+
+---
+
+### Override Author/Date
+```bash
+git commit --author="Jane Doe <jane@example.com>" -m "Fix"
+git commit --date="2026-05-25T10:00:00" -m "Backdated commit"
+```
+- Useful for correcting metadata.
+
+---
+
+### Verbose Mode
+```bash
+git commit --verbose
+```
+- Shows diff in commit editor.  
+- Helps when writing detailed commit messages.
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git commit -m "msg"` | Commit with inline message |
+| `git commit -am "msg"` | Auto-stage tracked files + commit |
+| `git commit --amend` | Rewrite last commit |
+| `git commit --no-edit` | Amend without changing message |
+| `git commit --author="X"` | Override author |
+| `git commit --date="X"` | Override date |
+| `git commit -s` | Add signoff line |
+| `git commit --allow-empty` | Commit with no changes |
+| `git commit --verbose` | Show diff in editor |
+
+---
+
+✅ That’s the **full breakdown of `git commit`** — from basic snapshots to advanced metadata overrides and special cases like empty commits.
+
+---

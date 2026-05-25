@@ -1,0 +1,89 @@
+1.     Private aren't visible to other user's.
+
+2.          # ================================
+            # 1. Create a parent repository
+            # ================================
+            mkdir parent-repo
+            cd parent-repo
+            git init   # Initialize parent repo
+
+            # Add a simple file
+            echo "Parent README" > README.md
+            git add README.md
+            git commit -m "Initial commit in parent repo"
+
+            # Directory tree now:
+            # parent-repo/
+            # ├── .git/
+            # └── README.md
+
+            # ================================
+            # 2. Create a nested repository
+            # ================================
+            mkdir child-repo
+            cd child-repo
+            git init   # Initialize child repo
+
+            echo "Child README" > README.md
+            git add README.md
+            git commit -m "Initial commit in child repo"
+
+            # Directory tree now:
+            # parent-repo/
+            # ├── .git/
+            # ├── README.md
+            # └── child-repo/
+            #     ├── .git/
+            #     └── README.md
+
+            # ================================
+            # 3. Prevent parent repo from tracking child repo’s .git
+            # ================================
+            cd ..
+            echo "child-repo/.git" >> .gitignore
+            git add .gitignore
+            git commit -m "Ignore child repo metadata"
+
+            # ================================
+            # 4. Safer alternative: use submodules
+            # ================================
+            # Instead of raw nesting, add child repo as a submodule:
+            git submodule add ./child-repo nested-child
+            git commit -m "Add child repo as submodule"
+
+            # Directory tree now:
+            # parent-repo/
+            # ├── .git/
+            # ├── .gitmodules
+            # ├── README.md
+            # ├── child-repo/        # still exists locally
+            # └── nested-child/      # tracked as submodule
+
+            # ================================
+            # 5. Common Errors & Fixes
+            # ================================
+
+            # ERROR: "fatal: detected dubious ownership in repository"
+            # Cause: Nested repo inherits wrong permissions.
+            # Fix: Adjust ownership or run:
+            git config --global --add safe.directory $(pwd)/child-repo
+
+            # ERROR: "fatal: not a git repository"
+            # Cause: Accidentally deleted or corrupted nested .git folder.
+            # Fix: Re-init child repo:
+            cd child-repo && git init
+
+            # ERROR: Parent repo tries to commit child’s .git folder
+            # Cause: Forgot to add to .gitignore.
+            # Fix: Add "child-repo/.git" to parent’s .gitignore and recommit.
+
+            # ================================
+            # 6. Safety Measures
+            # ================================
+            # - Always ignore nested .git folders in parent repo.
+            # - Prefer submodules or subtrees for clean workflows.
+            # - Document repo structure for collaborators.
+            # - Test cloning: run `git clone --recurse-submodules` to ensure submodules work.
+            # - Avoid `echo .gitignore >> .git` (dangerous: corrupts Git metadata).
+            # - Keep backups before experimenting with nested repos.
+

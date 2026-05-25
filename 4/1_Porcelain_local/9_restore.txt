@@ -1,0 +1,85 @@
+---
+
+# 🧭 Git Restore Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- Safely restores files to a previous state.  
+- Introduced as a **modern replacement** for parts of `git reset` and `git checkout`.  
+👉 Think of it as a “safety net” for undoing file changes without messing with commits.
+
+---
+
+## 🔹 2. Basic Restore Usage
+```bash
+git restore file.txt              # discard unstaged changes
+git restore --staged file.txt     # unstage file
+git restore --source=HEAD~2 file.txt # restore file from older commit
+```
+
+---
+
+## 🔹 3. Advanced Restore Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--staged` | Unstage file (move from index back to working tree) | `git restore --staged app.js` |
+| `--source` | Restore from specific commit | `git restore --source=abc123 app.js` |
+| `--worktree` | Restore working tree only | `git restore --worktree app.js` |
+| `--ignore-unmerged` | Ignore unmerged paths | `git restore --ignore-unmerged file.txt` |
+| `--patch` | Interactively choose which changes to restore | `git restore --patch app.js` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Discard wrong edits
+You edited `config.js` incorrectly:
+```bash
+git restore config.js
+```
+👉 File is reset to last committed state.
+
+---
+
+### Scenario B: Unstage a file
+You accidentally staged `debug.log`:
+```bash
+git restore --staged debug.log
+```
+👉 File is removed from staging area but changes remain in working directory.
+
+---
+
+### Scenario C: Restore from older commit
+You want `settings.json` as it was two commits ago:
+```bash
+git restore --source=HEAD~2 settings.json
+```
+
+---
+
+### Scenario D: Interactive restore
+You want to selectively undo changes in `app.js`:
+```bash
+git restore --patch app.js
+```
+👉 Git asks which hunks to restore.
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git restore file.txt` | Discard unstaged changes |
+| `git restore --staged file.txt` | Unstage file |
+| `git restore --source=commit file.txt` | Restore file from older commit |
+| `git restore --worktree file.txt` | Restore working tree only |
+| `git restore --patch file.txt` | Interactively restore changes |
+
+---
+
+✅ That’s the **full advanced breakdown of `git restore`**.  
+

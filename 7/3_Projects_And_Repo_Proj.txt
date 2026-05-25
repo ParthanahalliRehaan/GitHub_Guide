@@ -1,0 +1,180 @@
+---
+
+## 📌 Purpose of Projects
+- A **repository (repo)** is where your **code, issues, pull requests, and packages** live.  
+- A **project** is a **planning and tracking tool** — think of it like a **Kanban board or spreadsheet** that organizes work across one or many repos.  
+- Projects are about **workflow management**, not code storage.
+
+---
+
+## 🔧 1. Creating a Project
+
+**Scenario:** You want to track tasks for a new feature.
+
+- **Command:**
+  ```bash
+  gh project create --title "Login Feature Roadmap" --format board
+  ```
+- **Output:**
+  ```
+  ✓ Created project "Login Feature Roadmap"
+  URL: https://github.com/users/Rehaan/projects/1
+  ```
+
+Here, `--format board` gives you a Trello-style board. You could also use `--format table` for a spreadsheet-like view.
+
+---
+
+## 📂 2. Adding Items (Issues/PRs)
+
+**Scenario:** You want to add an issue to your project board.
+
+- **Command:**
+  ```bash
+  gh project item-add 1 --content-id ISSUE_ID
+  ```
+- **Output:**
+  ```
+  ✓ Added issue #12 to project "Login Feature Roadmap"
+  ```
+
+This links the issue directly to your project board, so you can move it between columns (To Do → In Progress → Done).
+
+---
+
+## 🗂️ 3. Managing Columns / Views
+
+**Scenario:** You want to add a new column called “Testing.”
+
+- **Command:**
+  ```bash
+  gh project field-create 1 --name "Testing" --data-type single_select
+  ```
+- **Output:**
+  ```
+  ✓ Added field "Testing" to project
+  ```
+
+Now you can drag issues/PRs into that column.
+
+---
+
+## 👥 4. Assigning & Tracking Work
+
+**Scenario:** You want to assign an issue to yourself and mark it as “In Progress.”
+
+- **Command:**
+  ```bash
+  gh issue edit 12 --add-assignee Rehaan
+  gh project item-edit 1 --id ITEM_ID --field "Status" --value "In Progress"
+  ```
+- **Output:**
+  ```
+  ✓ Assigned issue #12 to Rehaan
+  ✓ Updated project item status to "In Progress"
+  ```
+
+---
+
+## 📊 5. Difference Between Repo & Project
+
+| **Aspect**       | **Repository** | **Project** |
+|------------------|----------------|-------------|
+| Purpose          | Stores code, issues, PRs | Organizes tasks, workflows |
+| Scope            | One repo       | Can span multiple repos |
+| Content          | Code, commits, releases | Issues, PRs, notes, fields |
+| Analogy          | Filing cabinet | Whiteboard / Kanban board |
+
+---
+
+## ⚖️ Summary
+- **Repo = code + artifacts.**  
+- **Project = planning + tracking.**  
+- They complement each other: issues/PRs live in repos, but projects organize them into workflows.  
+
+---
+
+            Now let’s clarify **Projects inside repositories** — this is slightly different from the org/user-level projects we discussed earlier.
+
+            ---
+
+            ## 📌 Repo-Level Projects vs Org/User Projects
+
+            - **Repo Projects:**  
+              - Attached directly to a single repository.  
+              - Useful when you want to track issues, PRs, and tasks **specific to that repo only**.  
+              - Think of it as a **local project board** for one codebase.
+
+            - **Org/User Projects:**  
+              - Exist at the organization or user level.  
+              - Can span **multiple repositories**.  
+              - Better for cross-repo planning, like tracking a feature that touches frontend + backend repos.
+
+            ---
+
+            ## 🔧 1. Creating a Project Inside a Repo
+
+            **Scenario:** You want a Kanban board for your repo `my-app`.
+
+            - **Command:**
+              ```bash
+              gh project create --title "My-App Roadmap" --repository Rehaan/my-app --format board
+              ```
+            - **Output:**
+              ```
+              ✓ Created project "My-App Roadmap" inside repo Rehaan/my-app
+              URL: https://github.com/Rehaan/my-app/projects/1
+              ```
+
+            ---
+
+            ## 📂 2. Adding Issues/PRs
+
+            **Scenario:** You want to add issue #12 to the repo project.
+
+            - **Command:**
+              ```bash
+              gh project item-add 1 --content-id ISSUE_ID --repository Rehaan/my-app
+              ```
+            - **Output:**
+              ```
+              ✓ Added issue #12 to project "My-App Roadmap"
+              ```
+
+            ---
+
+            ## 🗂️ 3. Managing Workflow
+
+            **Scenario:** You want to move an issue from “To Do” → “In Progress.”
+
+            - **Command:**
+              ```bash
+              gh project item-edit 1 --id ITEM_ID --field "Status" --value "In Progress"
+              ```
+            - **Output:**
+              ```
+              ✓ Updated project item status to "In Progress"
+              ```
+
+            ---
+
+            ## 📊 4. Difference in Scope
+
+            | **Aspect**       | **Repo Project** | **Org/User Project** |
+            |------------------|------------------|-----------------------|
+            | Scope            | One repository   | Multiple repositories |
+            | Use Case         | Track repo-specific tasks | Cross-repo planning |
+            | Example          | Bug fixes in `my-app` | Company-wide roadmap |
+            | URL              | `/repo/projects/` | `/orgs/ORG/projects/` |
+
+            ---
+
+            ## ⚖️ Summary
+            - Repo projects = **local boards** tied to one repo.  
+            - Org/user projects = **global boards** spanning many repos.  
+            - Both use the same project system (boards/tables), but differ in scope and purpose.  
+
+            ---
+
+            👉 Next, as you planned: after this chat ends, we’ll move on to **GitHub Insights → Security → Projects inside repos → Actions** (we’ve covered those in order). The next stop will be **Actions (already done), Insights (done), Security (done), Repo Projects (just done)**.  
+

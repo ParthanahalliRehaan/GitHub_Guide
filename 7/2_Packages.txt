@@ -1,0 +1,119 @@
+---
+
+## 📦 Purpose of Packages
+- GitHub Packages is a **package hosting service** integrated with GitHub.  
+- Think of it as a **registry** (like npm, Maven, Docker Hub) but tied directly to your repos.  
+- It lets you **publish, install, and manage packages** alongside your code, with permissions controlled by GitHub.
+
+---
+
+## 🔧 1. Authenticate for Packages
+
+**Scenario:** You want to push a package to GitHub Packages.  
+- First, authenticate with a token that has `write:packages` scope.  
+```bash
+gh auth login
+```
+- Output:
+```
+✓ Authentication complete.
+```
+
+---
+
+## 🐳 2. Docker Example
+
+**Scenario:** You want to publish a Docker image to GitHub Packages.
+
+- **Command:**
+  ```bash
+  docker login ghcr.io -u USERNAME -p TOKEN
+  docker build -t ghcr.io/USERNAME/myimage:1.0.0 .
+  docker push ghcr.io/USERNAME/myimage:1.0.0
+  ```
+- **Output:**
+  ```
+  Login Succeeded
+  Pushed ghcr.io/USERNAME/myimage:1.0.0
+  ```
+
+---
+
+## 📦 3. npm Example
+
+**Scenario:** You want to publish an npm package.
+
+- Add registry to `.npmrc`:
+  ```
+  @USERNAME:registry=https://npm.pkg.github.com
+  //npm.pkg.github.com/:_authToken=TOKEN
+  ```
+- **Command:**
+  ```bash
+  npm publish
+  ```
+- **Output:**
+  ```
+  + my-package@1.0.0
+  Published to https://npm.pkg.github.com
+  ```
+
+---
+
+## ☕ 4. Maven Example
+
+**Scenario:** You want to publish a Java library.
+
+- Add to `pom.xml`:
+  ```xml
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/OWNER/REPO</url>
+    </repository>
+  </distributionManagement>
+  ```
+- **Command:**
+  ```bash
+  mvn deploy
+  ```
+- **Output:**
+  ```
+  Uploaded: https://maven.pkg.github.com/OWNER/REPO/my-lib-1.0.jar
+  ```
+
+---
+
+## 📊 5. Managing Packages
+
+- **List packages in a repo:**
+  ```bash
+  gh api repos/OWNER/REPO/packages
+  ```
+  Output:
+  ```
+  [
+    { "name": "myimage", "type": "container" },
+    { "name": "my-package", "type": "npm" }
+  ]
+  ```
+
+- **Delete a package version:**
+  ```bash
+  gh api --method DELETE repos/OWNER/REPO/packages/container/myimage/versions/1
+  ```
+  Output:
+  ```
+  ✓ Deleted package version 1
+  ```
+
+---
+
+## ⚖️ Summary
+- Packages = **artifact hosting** (npm, Docker, Maven, NuGet, etc.) inside GitHub.  
+- Owner can **publish, install, and manage** packages.  
+- They serve a different purpose than issues: issues track tasks, packages distribute software.  
+
+---
+
+👉 Next, as you planned: after this chat ends, we’ll dive into **Projects** (and clarify if they’re the same as repos or something else).  

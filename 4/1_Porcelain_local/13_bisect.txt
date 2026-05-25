@@ -1,0 +1,98 @@
+---
+
+# 🧭 Git Bisect Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- `git bisect` uses **binary search** to find the commit that introduced a bug.  
+- Instead of manually checking dozens of commits, Git narrows it down step by step.  
+👉 Think of it as “debugging with divide-and-conquer.”
+
+---
+
+## 🔹 2. Basic Workflow
+```bash
+git bisect start
+git bisect bad HEAD        # mark current commit as bad
+git bisect good v1.0       # mark known good commit
+# Git checks commits between good and bad
+git bisect reset           # return to original branch
+```
+
+---
+
+## 🔹 3. Advanced Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `--no-checkout` | Don’t checkout commits (useful for scripts) | `git bisect start --no-checkout` |
+| `run <cmd>` | Automate testing with a script | `git bisect run npm test` |
+| `skip` | Skip current commit (e.g., broken build) | `git bisect skip` |
+| `log` | Show bisect session log | `git bisect log` |
+| `replay` | Replay a previous bisect session | `git bisect replay bisect.log` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Manual bisect
+You know version `v1.0` worked, but `HEAD` is broken:
+```bash
+git bisect start
+git bisect bad HEAD
+git bisect good v1.0
+```
+👉 Git checks out a midpoint commit. You test it:
+- If broken → `git bisect bad`  
+- If working → `git bisect good`  
+
+Repeat until Git identifies the culprit commit.
+
+---
+
+### Scenario B: Automated bisect
+You have a test script that fails when the bug is present:
+```bash
+git bisect start
+git bisect bad HEAD
+git bisect good v1.0
+git bisect run ./test-script.sh
+```
+👉 Git automatically runs the script at each step until the bad commit is found.
+
+---
+
+### Scenario C: Skip problematic commits
+One commit doesn’t build properly:
+```bash
+git bisect skip
+```
+👉 Git ignores it and continues the search.
+
+---
+
+### Scenario D: Replay a previous bisect
+You saved a bisect log and want to rerun it:
+```bash
+git bisect replay bisect.log
+```
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git bisect start` | Begin bisect session |
+| `git bisect bad <commit>` | Mark commit as bad |
+| `git bisect good <commit>` | Mark commit as good |
+| `git bisect run <cmd>` | Automate bisect with script |
+| `git bisect skip` | Skip current commit |
+| `git bisect log` | Show bisect session log |
+| `git bisect replay <file>` | Replay previous bisect |
+| `git bisect reset` | End bisect session |
+
+---
+
+✅ That’s the **full advanced breakdown of `git bisect`** — your detective tool for pinpointing buggy commits.  

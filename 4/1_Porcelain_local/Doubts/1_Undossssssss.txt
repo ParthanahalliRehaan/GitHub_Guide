@@ -1,0 +1,114 @@
+---
+
+# 🔹 Undoing Commits in Git (Complete Toolkit)
+
+## 1. Undo with `git reset`
+`reset` moves the **HEAD pointer** and optionally changes the staging area/working directory.
+
+- **Undo commit, keep changes staged**  
+  ```bash
+  git reset --soft HEAD~1
+  ```
+  → Removes last commit but keeps changes staged.  
+  👉 Best if you just want to rewrite the commit message.
+
+- **Undo commit, keep changes unstaged**  
+  ```bash
+  git reset --mixed HEAD~1
+  ```
+  → Removes last commit, keeps changes in working directory but unstaged.  
+  👉 Default mode.
+
+- **Undo commit, discard changes**  
+  ```bash
+  git reset --hard HEAD~1
+  ```
+  → Removes last commit and discards changes.  
+  ⚠️ Dangerous — data lost unless recovered via `reflog`.
+
+---
+
+## 2. Undo with `git revert`
+`revert` creates a **new commit** that undoes the changes of a previous commit.
+
+- **Revert a single commit**  
+  ```bash
+  git revert <commit-id>
+  ```
+  → Safe for shared repos because history isn’t rewritten.
+
+- **Revert a merge commit**  
+  ```bash
+  git revert -m 1 <merge-commit-id>
+  ```
+  → Undoes a merge, keeping parent branch specified by `-m`.
+
+👉 Use `revert` when commits are already pushed and shared.
+
+---
+
+## 3. Undo with `git restore`
+`restore` is a newer command for undoing file changes.
+
+- **Discard changes in working directory**  
+  ```bash
+  git restore file.txt
+  ```
+  → Restores file to last committed state.
+
+- **Unstage a file (undo add)**  
+  ```bash
+  git restore --staged file.txt
+  ```
+  → Removes file from staging area without discarding edits.
+
+👉 Use `restore` for file-level undo (working directory or staging).
+
+---
+
+## 4. Undo with `git reflog`
+`reflog` tracks all HEAD movements (commits, resets, checkouts).
+
+- **View HEAD history**  
+  ```bash
+  git reflog
+  ```
+  Output example:
+  ```
+  a1b2c3 HEAD@{0}: commit: Add login
+  d4e5f6 HEAD@{1}: reset: moving to HEAD~1
+  ```
+- **Recover lost commit**  
+  ```bash
+  git checkout a1b2c3
+  ```
+  → Lets you restore commits even after `reset --hard`.
+
+👉 Use `reflog` as a safety net when you think you’ve “lost” commits.
+
+---
+
+## 5. Comparison Table
+
+| Tool | Purpose | Safe for Shared History? |
+|------|---------|---------------------------|
+| `reset --soft` | Undo commit, keep staged | ❌ Rewrites history |
+| `reset --mixed` | Undo commit, keep unstaged | ❌ Rewrites history |
+| `reset --hard` | Undo commit, discard changes | ❌ Rewrites history |
+| `revert` | Create new commit that undoes | ✅ Safe |
+| `restore` | Undo file changes or unstage | ✅ Safe |
+| `reflog` | Recover lost commits | ✅ Safe (local recovery only) |
+
+---
+
+## 6. Practical Scenarios
+
+- **Wrong commit message** → `git commit --amend` or `git reset --soft HEAD~1` then recommit.  
+- **Committed too early** → `git reset --mixed HEAD~1` (keep changes unstaged).  
+- **Want to erase commit completely** → `git reset --hard HEAD~1` (⚠️ careful).  
+- **Undo commit already pushed** → `git revert <commit-id>` (safe).  
+- **Accidentally staged wrong file** → `git restore --staged file.txt`.  
+- **Lost commit after reset** → `git reflog` to find SHA, then `git checkout <sha>`.
+
+---
+

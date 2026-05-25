@@ -1,0 +1,95 @@
+---
+
+# 🧭 Git Stash Deep Dive (V2)
+
+---
+
+## 🔹 1. Definition & Purpose
+- Temporarily saves uncommitted changes (both staged and unstaged).  
+- Lets you switch branches or work on something else without losing progress.  
+👉 Think of it as Git’s “clipboard” for your work-in-progress.
+
+---
+
+## 🔹 2. Basic Stash Usage
+```bash
+git stash             # stash changes
+git stash list        # show stashes
+git stash pop         # apply and remove latest stash
+git stash apply       # apply without removing
+git stash drop        # delete a specific stash
+git stash clear       # remove all stashes
+```
+
+---
+
+## 🔹 3. Advanced Stash Options
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `-u` | Include untracked files | `git stash -u` |
+| `-a` | Include ignored files | `git stash -a` |
+| `--keep-index` | Keep staged changes intact | `git stash --keep-index` |
+| `--patch` | Interactively choose hunks to stash | `git stash --patch` |
+| `stash@{n}` | Apply specific stash | `git stash apply stash@{2}` |
+
+---
+
+## 🔹 4. Scenario Walkthrough
+
+### Scenario A: Save work before switching branches
+You’re halfway editing `auth.js` but need to fix a bug in `main`:
+```bash
+git stash -u
+git checkout main
+# fix bug, commit
+git checkout feature-login
+git stash pop
+```
+
+---
+
+### Scenario B: Keep staged changes intact
+You staged a fix but want to stash only unstaged edits:
+```bash
+git stash --keep-index
+```
+
+---
+
+### Scenario C: Apply a specific stash
+You have multiple stashes and want to apply the second one:
+```bash
+git stash list
+git stash apply stash@{2}
+```
+
+---
+
+### Scenario D: Interactive stash
+You want to stash only part of your changes in `app.js`:
+```bash
+git stash --patch
+```
+👉 Git asks which hunks to stash.
+
+---
+
+## 🔹 5. Summary Table
+
+| Command | Purpose |
+|---------|---------|
+| `git stash` | Save changes temporarily |
+| `git stash list` | Show stashes |
+| `git stash pop` | Apply and remove latest stash |
+| `git stash apply` | Apply stash without removing |
+| `git stash drop` | Delete specific stash |
+| `git stash clear` | Remove all stashes |
+| `git stash -u` | Include untracked files |
+| `git stash -a` | Include ignored files |
+| `git stash --keep-index` | Keep staged changes intact |
+| `git stash --patch` | Interactively stash hunks |
+
+---
+
+✅ That’s the **full advanced breakdown of `git stash`**.  

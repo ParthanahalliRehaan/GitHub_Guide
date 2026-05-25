@@ -1,0 +1,129 @@
+---
+
+## 📊 Purpose of Insights
+- Insights give you **analytics** about your repo: traffic, clones, contributors, commits, code frequency, dependency graph, etc.  
+- They help you understand **engagement, growth, and risks**.  
+- Think of Insights as your **dashboard** for repo health.
+
+---
+
+## 🔧 1. Traffic & Clones
+
+**Scenario:** You want to see how many people visited your repo last week.
+
+- **Command:**
+  ```bash
+  gh api repos/OWNER/REPO/traffic/views
+  ```
+- **Output:**
+  ```json
+  {
+    "count": 120,
+    "uniques": 85,
+    "views": [
+      { "timestamp": "2026-05-18T00:00:00Z", "count": 20, "uniques": 15 },
+      { "timestamp": "2026-05-19T00:00:00Z", "count": 25, "uniques": 18 }
+    ]
+  }
+  ```
+
+**Scenario:** You want to see clone stats.
+```bash
+gh api repos/OWNER/REPO/traffic/clones
+```
+Output:
+```json
+{
+  "count": 40,
+  "uniques": 30
+}
+```
+
+---
+
+## 👥 2. Contributors
+
+**Scenario:** You want to see who contributed most in the past month.
+
+- **Command:**
+  ```bash
+  gh api repos/OWNER/REPO/stats/contributors
+  ```
+- **Output:**
+  ```json
+  [
+    { "author": { "login": "Rehaan" }, "total": 25 },
+    { "author": { "login": "Alice" }, "total": 10 }
+  ]
+  ```
+
+---
+
+## 📈 3. Commit Activity
+
+**Scenario:** You want to see weekly commit activity.
+
+- **Command:**
+  ```bash
+  gh api repos/OWNER/REPO/stats/commit_activity
+  ```
+- **Output:**
+  ```json
+  [
+    { "week": 1715904000, "total": 12 },
+    { "week": 1716508800, "total": 8 }
+  ]
+  ```
+
+---
+
+## 🧩 4. Code Frequency
+
+**Scenario:** You want to see additions vs deletions.
+
+- **Command:**
+  ```bash
+  gh api repos/OWNER/REPO/stats/code_frequency
+  ```
+- **Output:**
+  ```json
+  [
+    [1715904000, 200, -50],
+    [1716508800, 150, -30]
+  ]
+  ```
+
+This means: in that week, 200 lines added, 50 deleted.
+
+---
+
+## 🛡️ 5. Dependency Graph
+
+**Scenario:** You want to see dependencies for security/maintenance.
+
+- **Command:**
+  ```bash
+  gh api repos/OWNER/REPO/dependency-graph/sbom
+  ```
+- **Output:**
+  ```
+  {
+    "dependencies": [
+      { "package": "express", "version": "4.18.2" },
+      { "package": "pg", "version": "8.11.1" }
+    ]
+  }
+  ```
+
+---
+
+## ⚖️ Summary
+- **Traffic & clones** → measure popularity.  
+- **Contributors & commits** → measure activity.  
+- **Code frequency** → measure churn.  
+- **Dependency graph** → measure risk.  
+- Insights = **analytics layer** for repos, helping you make decisions.
+
+---
+
+👉 Next, as you planned: after this chat ends, we’ll move on to **Security** — I’ll show you scenario-based examples of vulnerability alerts, Dependabot, and secret scanning.  
